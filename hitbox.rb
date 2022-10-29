@@ -43,6 +43,13 @@ class Hitbox
     @owner.on_collision(other) if @owner != nil
   end
 
+  def update_rect(x, y, w, h)
+    @x = x
+    @y = y
+    @w = w
+    @h = h
+  end
+
   def to_s
     return "Hitbox(#{@x}, #{@y}, #{@w}, #{@h}, #{@type})"
   end
@@ -169,17 +176,57 @@ class QuadTree
 
 end
 
-class Owner
+class CollidableEntity
+
+  attr :collision
+
+  def initialize(child, x, y, w, h, type)
+      # ...
+      
+      #assume type x, y, w, h and type are set, accesible and exists
+      @rect_collision = Omega::Rect.new(x, y, w, h)
+
+      @collision = Hitbox.new(@rect_collision.x, @rect_collision.y,
+                              @rect_collision.w, @rect_collision.h, type, child)
+  end
 
   def on_collision(other)
-    puts "Collision with " + other.type.to_s
+      # does nothing by default
   end
-  
+
+  def update_collider_position(x, y)
+      @rect_collision.x = x
+      @rect_collision.y = y
+      @collision.update_rect(@rect_collision.x, @rect_collision.y,
+                            @rect_collision.w, @rect_collision.h)
+  end
+
+  def update_collider_size(w, h)
+      @rect_collision.w = w
+      @rect_collision.h = h
+      @collision.update_rect(@rect_collision.x, @rect_collision.y,
+                            @rect_collision.w, @rect_collision.h)
+  end
+
+  def update_collider(x, y, w, h)
+    update_collider_position(x, y)
+    update_collider_size(w, h)
+  end
+
 end
 
-q = QuadTree.new(0, 0, 800, 600, 50)
-for i in 0..500
-  q.insert(Hitbox.new(rand(800), rand(600), 10, 10, i, Owner.new))
-end
+#class Player < CollidableEntity
 
-q.update
+#  def initialize(x, y)
+#    super(self, x, y, 32, 32, 0)
+#  end
+
+#  def on_collision(other)
+#    puts "Player collided with #{other}"
+#  end
+
+#  def update
+#    update_collider(x, y, w, h)
+#  end
+
+#end

@@ -17,11 +17,77 @@ module Omega
     LICENCE = "MIT"
 
     # Structs
-    Vector2 = Struct.new(:x, :y)
-    Vector3 = Struct.new(:x, :y, :z)
     Size = Struct.new(:width, :height)
 
     Font = Gosu::Font.new(150)
+
+    class Vector2
+
+        attr_accessor :x, :y
+
+        def initialize(x = 0, y = 0)
+            @x = x;
+            @y = y;
+        end
+
+        def toVector3()
+            return Vector3.new(@x, @y, 0)
+        end
+
+        def normalize()
+            length = Math.sqrt(@x * @x + @y * @y)
+            @x /= length
+            @y /= length
+            return self
+        end
+
+        def distance(vec)
+            return Gosu.distance(@x, @y, vec.x, vec.y)
+        end
+
+        def +(vector)
+            return Vector2.new(@x + vector.x, @y + vector.y)
+        end
+
+        def *(scalar)
+            return Vector2.new(@x * scalar, @y * scalar)
+        end
+    end
+
+    class Vector3
+
+        attr_accessor :x, :y, :z
+
+        def initialize(x = 0, y = 0, z = 0)
+            @x = x;
+            @y = y;
+            @z = z;
+        end
+
+        def toVector2()
+            return Vector2.new(@x, @y)
+        end
+
+        def normalize()
+            length = Math.sqrt(@x * @x + @y * @y + @z * @z)
+            @x /= length
+            @y /= length
+            @z /= length
+            return self
+        end
+
+        def distance(vec)
+            return Gosu.distance(@x, @y, vec.x, vec.y)
+        end
+
+        def +(vector)
+            return Vector3.new(@x + vector.x, @y + vector.y, @z + vector.z)
+        end
+
+        def *(scalar)
+            return Vector3.new(@x * scalar, @y * scalar, @z * scalar)
+        end
+    end
 
     # Basic global functions
     def Omega.log_inf(msg)

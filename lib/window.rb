@@ -11,6 +11,7 @@ module Omega
     @@needs_cursor = true
     @@just_pressed_key = -1
     @@just_released_key = -1
+    @@pause = false
 
     # The window class
     class RenderWindow < Gosu::Window
@@ -237,4 +238,23 @@ module Omega
         Omega.window.frame_count_reset = fcr
     end
 
+    def Omega.pause()
+        @@pause = true
+    end
+
+    def Omega.play()
+        @@pause = false
+    end
+
+    def Omega.paused?
+        return @@pause
+    end
+
+    # def Omega.positionInWindow?(x, y)
+    #     return x >= 0 and x < Omega.width and y >= 0 and y < Omega.height
+    # end
+
+    # def Omega.positionInWindow?(vector)
+    #     return Omega.positionInWindow?(vector.x, vector.y)
+    # end
 end

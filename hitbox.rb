@@ -1,0 +1,185 @@
+HITBOX_NO_TYPE = -1
+
+class Hitbox
+
+  attr :x, :y, :w, :h, :type
+
+  def initialize(x, y, w, h, type = HITBOX_NO_TYPE, owner = nil)
+    @x = x
+    @y = y
+    @w = w
+    @h = h
+    @type = type
+    @owner = owner
+  end
+
+  def collides(other)
+    @x > other.x + other.w or
+    @x + @w < other.x or
+    @y > other.y + other.h or
+    @y + @h < other.y
+  end
+
+  def draw
+    Gosu.draw_rect(@x, @y, @w, @h, Gosu::Color::RED)
+  end
+
+  def move(x, y)
+    @x += x
+    @y += y
+  end
+
+  def set_size(w, h)
+    @w = w
+    @h = h
+  end
+
+  def set_position(x, y)
+    @x = x
+    @y = y
+  end
+
+  def on_collision(other)
+    @owner.on_collision(other) if @owner != nil
+  end
+
+  def to_s
+    return "Hitbox(#{@x}, #{@y}, #{@w}, #{@h}, #{@type})"
+  end
+
+end
+
+QUADTREE_NODE_TYPE = 0xFFFFFFFF
+QUADTREE_CAPACITY = 4
+QUADTREE_MIN_DEPTH = 0
+
+class QuadTree
+
+  def initialize(x, y, w, h, depth=20)
+    if depth < QUADTREE_MIN_DEPTH
+      raise "QuadTree depth must be greater than " + QUADTREE_MIN_DEPTH.to_s
+    end
+
+    @hitbox = Hitbox.new(x, y, w, h, -1)
+    @depth = depth
+    @children = []
+    @hitboxes = []
+  end
+
+  def insert(hitbox)
+    if @children.empty?
+      @hitboxes << hitbox
+      if @hitboxes.length > QUADTREE_CAPACITY && @depth > QUADTREE_MIN_DEPTH
+        subdivide
+      end
+    else
+      @children.each do |child|
+        if child.contains(hitbox)
+          child.insert(hitbox)
+          break
+        end
+      end
+    end
+  end
+
+  def subdivide
+    @children << QuadTree.new(@hitbox.x, @hitbox.y, @hitbox.w / 2, @hitbox.h / 2, @depth - 1)
+    @children << QuadTree.new(@hitbox.x + @hitbox.w / 2, @hitbox.y, @hitbox.w / 2, @hitbox.h / 2, @depth - 1)
+    @children << QuadTree.new(@hitbox.x, @hitbox.y + @hitbox.h / 2, @hitbox.w / 2, @hitbox.h / 2, @depth - 1)
+    @children << QuadTree.new(@hitbox.x + @hitbox.w / 2, @hitbox.y + @hitbox.h / 2, @hitbox.w / 2, @hitbox.h / 2, @depth - 1)
+
+    @hitboxes.each do |hitbox|
+      @children.each do |child|
+        if child.contains(hitbox)
+          child.insert(hitbox)
+          break
+        end
+      end
+    end
+    @hitboxes = []
+  end
+
+  def contains(hitbox)
+    @hitbox.collides(hitbox)
+  end
+
+  def draw
+    Gosu.draw_rect(@x, @y, @w, @h, Gosu::Color::BLACK)
+    @children.each do |child|
+      child.draw
+    end
+  end
+
+  def query_range(range)
+    results = []
+    if @children.empty?
+      @hitboxes.each do |hitbox|
+        if range.collides(hitbox)
+          results << hitbox
+        end
+      end
+    else
+      @children.each do |child|
+        if child.contains(range)
+          results += child.query_range(range)
+        end
+      end
+    end
+    results
+  end
+
+  def query_point(x, y)
+    query_range(Hitbox.new(x, y, 1, 1, QUADTREE_NODE_TYPE))
+  end
+
+  def clear()
+    @children = []
+    @hitboxes = []
+  end
+
+  def update()
+    @hitboxes.each do |hitbox|
+      query_range(hitbox).each do |other|
+        if hitbox != other
+          hitbox.on_collision(other)
+        end
+      end
+    end
+    @children.each do |child|
+      child.update
+    end
+  end
+
+  def to_s
+    s = "QuadTree(#@hitbox, #@depth): ["
+
+    if @hitboxes.empty?
+      s += "n/a"
+    else
+      tabs = "\t" * (@depth + 2)
+      s += "\n" + tabs + @hitboxes.join(",\n" + tabs)
+    end
+    s += "]\n"
+
+    @children.each do |child|
+      s += "\t" + child.to_s
+    end
+    return s
+  end
+
+end
+
+class Owner
+
+  def on_collision(other)
+    puts "Collision with " + other.type.to_s
+  end
+  
+end
+
+q = QuadTree.new(0, 0, 800, 600, 50)
+for i in 0..500
+  q.insert(Hitbox.new(rand(800), rand(600), 10, 10, i, Owner.new))
+end
+
+q.update

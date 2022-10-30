@@ -7,7 +7,7 @@ class EasingState < Omega::State
 
     def update
         if Omega::just_pressed(Gosu::MS_LEFT)
-            @sprite.position.move_to(Omega.mouse_position.to_vector3(), :ease_in_out_back, 0.01)
+            @sprite.position.move_to(Omega.mouse_position.to_vector3(), :ease_in_out_back, 0.02)
         end
 
         @sprite.position.update_easing()

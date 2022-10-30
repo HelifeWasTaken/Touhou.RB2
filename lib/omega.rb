@@ -101,7 +101,7 @@ module Omega
             return if not @ease or not @ease_position
             @x += (@ease_position.x - @x) * Ease::send(@ease, @ease_progress)
             @y += (@ease_position.y - @y) * Ease::send(@ease, @ease_progress)
-            @ease_progress += 0.01 if @ease_progress < 1
+            @ease_progress += @ease_factor if @ease_progress < 1
         end
 
         def move_to(position, ease = :ease_in_out_sine, ease_factor = DEFAULT_EASE_FACTOR)

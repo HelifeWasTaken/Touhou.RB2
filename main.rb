@@ -42,10 +42,10 @@ class TestState < Omega::State
             # Omega.pause()
         end
         # @emitter.update()
-        # if not @emitter.isEmitting?
+        # if not @emitter.is_emitting?
             # Omega.play() if Omega.paused?
         # end
-        # return if (Omega.paused?)
+        return if (Omega.paused?)
         for bullet in @bullets
             bullet.update()
         end
@@ -131,6 +131,8 @@ class Game < Omega::RenderWindow
     $scale = 1
     $camera = Omega::Camera.new()
     $camera.scale = Omega::Vector2.new($scale, $scale)
+
+    $tree = nil
 
     def load
         $game = self

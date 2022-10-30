@@ -20,6 +20,10 @@ module Omega
             return true
         end
 
+        def contains?(position)
+            return point_collides?(position)
+        end
+
         def point_collides?(position)
             if position.x >= @position.x and position.x <= @position.x + @width and
                 position.y >= @position.y and position.y <= @position.y + @height

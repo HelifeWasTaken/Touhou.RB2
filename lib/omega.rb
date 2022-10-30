@@ -49,6 +49,10 @@ module Omega
             return Vector2.new(@x + vector.x, @y + vector.y)
         end
 
+        def -(vector)
+            return Vector2.new(@x - vector.x, @y - vector.y)
+        end
+
         def *(scalar)
             return Vector2.new(@x * scalar, @y * scalar)
         end

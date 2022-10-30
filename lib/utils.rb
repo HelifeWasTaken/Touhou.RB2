@@ -73,6 +73,10 @@ module Omega
         return (angle * Math::PI/180)
     end
 
+    def Omega.to_deg(rad)
+        return (rad * 180/Math::PI)
+    end
+
     def Omega.sign(number)
         if number > 0
             return 1

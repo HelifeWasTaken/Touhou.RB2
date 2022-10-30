@@ -16,7 +16,7 @@ class BulletBehavior
     end
 
     def update()
-        puts "Killing bullet at #{@owner.position.to_s}" if not Omega.position_in_window?(@owner.position, Omega::Vector2.new(250, 250))
+        # puts "Killing bullet at #{@owner.position.to_s}" if not Omega.position_in_window?(@owner.position, Omega::Vector2.new(250, 250))
         @owner.kill if not Omega.position_in_window?(@owner.position, Omega::Vector2.new(250, 250))
         @tick += 1;
     end
@@ -148,6 +148,11 @@ class Bullet < Omega::Sprite
 
     def initialize(source, width = nil, height = width)
         super(source)
+
+        @@id ||= 0
+        @id = @@id
+        @@id += 1
+
         if (width != nil)
             if (height != nil)
                 @size = Omega::Vector2.new(width, height)
@@ -183,6 +188,7 @@ class Bullet < Omega::Sprite
     def spawn()
         throw "Bullet: sink cannot be nil" if @_sink.nil?
         @_sink << self
+        return self
     end
 
     def update(data = {})
@@ -206,7 +212,8 @@ class Bullet < Omega::Sprite
     end
 
     def draw()
-        @hitbox.draw()
+        # @hitbox.draw()
+        @position.z = 10_000
         super()
     end
 
@@ -234,7 +241,7 @@ class Bullet < Omega::Sprite
 
     def set_position(pos)
         if pos.is_a? Omega::Vector2
-            self.position = pos.toVector3 
+            self.position = pos.to_vector3 
         else
             self.position = pos.clone
         end
@@ -243,7 +250,7 @@ class Bullet < Omega::Sprite
     end
 
     def move(vec)
-        return set_position(position + vec.toVector3)
+        return set_position(position + vec.to_vector3)
     end
 
     def set_bullet_side(enemy = false)
@@ -294,6 +301,10 @@ class Bullet < Omega::Sprite
 
     def get_top_behavior()
         return @_behavior[-1]
+    end
+
+    def get_id
+        return @id
     end
 
 end

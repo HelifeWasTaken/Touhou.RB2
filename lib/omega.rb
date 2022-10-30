@@ -97,14 +97,27 @@ module Omega
             return Vector2.new(@x * scalar, @y * scalar)
         end
 
+        def -(other)
+            return Vector2.new(@x - other.x, @y - other.y)
+        end
+
         def to_s()
             return "Vector2(x: " + @x.to_s + ", y: " + @y.to_s + ")"
+        end
 
         def update_easing
             return if not @ease or not @ease_position
             @x += (@ease_position.x - @x) * Ease::send(@ease, @ease_progress)
             @y += (@ease_position.y - @y) * Ease::send(@ease, @ease_progress)
             @ease_progress += @ease_factor if @ease_progress < 1
+            if (@ease_position.x - @x).abs <= 1 and (@ease_position.y - @y).abs <= 1
+                @x = @ease_position.x
+                @y = @ease_position.y
+                @ease = nil
+                @ease_position = nil
+                @ease_progress = 0
+                @initial_ease_dist = 0
+            end
         end
 
         def move_to(position, ease = :ease_in_out_sine, ease_factor = DEFAULT_EASE_FACTOR)
@@ -112,7 +125,11 @@ module Omega
             @ease_position = position
             @ease_progress = 0
             @ease_factor = ease_factor
-            @initial_ease_dist = distance(position)
+            @initial_ease_dist = distance2d(position)
+        end
+
+        def is_easing?
+            @ease != nil && @ease_position != nil
         end
     end
 
@@ -138,6 +155,10 @@ module Omega
             return self
         end
 
+        def distance2d(vec)
+            return Gosu.distance(@x, @y, vec.x, vec.y)
+        end
+
         def distance(vec)
             return Math::sqrt((@x - vec.x) ** 2 + (@y - vec.y) ** 2 + (@z - vec.z) ** 2)
         end
@@ -148,6 +169,10 @@ module Omega
 
         def *(scalar)
             return Vector3.new(@x * scalar, @y * scalar, @z * scalar)
+        end
+
+        def -(other)
+            return Vector3.new(@x - other.x, @y - other.y, @z - other.z)
         end
 
         def to_s()

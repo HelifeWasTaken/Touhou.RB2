@@ -47,13 +47,19 @@ module Omega
             end
 
             @visible = true
-
             @movable = true
+
+            @ctrail_frame = 0
+            @trail = false
+            @trail_frames = []
+            @trail_frames_count = 10
+            @trail_frame_delay = 0
         end
 
         def update; end
 
         def draw
+            draw_trail()
             @image.draw_rot((@flip.x) ? @position.x + @width * @scale.x - @width*2 * @scale.x * @origin.x : @position.x,
                             (@flip.y) ? @position.y + @height * @scale.y - @height*2 * @scale.y * @origin.y : @position.y,
                             @position.z,
@@ -103,6 +109,7 @@ module Omega
         rescue
             nil
         end
+
         def subimage(x, y, width, height)
             return @image.subimage(x, y, width, height)
         end
@@ -134,6 +141,14 @@ module Omega
             @position = Omega::Vector3.new(x, y, z)
         end
 
+        def set_trail(enabled, trail_frames = 10, trail_frame_delay = 0)
+            @trail = enabled
+            @trail_frames = []
+            @trail_frames_count = trail_frames
+            @ctrail_frame = 0
+            @trail_frame_delay = trail_frame_delay
+        end
+
         # Debug only functions
 
         def debug_move(speed = 5)
@@ -147,6 +162,32 @@ module Omega
                 @position.y -= speed
             elsif Omega::pressed(Gosu::KB_DOWN)
                 @position.y += speed
+            end
+        end
+
+        protected
+
+        def draw_trail
+            @trail_frames_timer ||= 0
+            @trail_frames_timer += 1
+            if @trail and @trail_frames_timer >= @trail_frame_delay
+                @trail_frames.shift if @trail_frames.size >= @trail_frames_count
+                @trail_frames << @position.clone
+                @trail_frames_timer = 0
+            end
+
+            if @trail
+                base_alpha = 255
+                alpha = base_alpha
+                sprite = self.clone
+                sprite.set_trail(false)
+                @trail_frames.reverse.each do |frame_pos|
+                    sprite.position = frame_pos
+                    sprite.draw
+                    sprite.alpha = alpha
+                    alpha -= base_alpha / @trail_frames_count.size
+                end
+                self.alpha = 255
             end
         end
     end
@@ -182,6 +223,7 @@ module Omega
         end
 
         def draw(can_add_frame = true)
+            draw_trail()
             if @current_animation != nil
                 if @frame_speed != 0 and not @pause and can_add_frame
                     @current_frame += ((@animations_speed[@current_animation]) ? @animations_speed[@current_animation] : @frame_speed)

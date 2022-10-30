@@ -254,7 +254,8 @@ module Omega
     #     return x >= 0 and x < Omega.width and y >= 0 and y < Omega.height
     # end
 
-    # def Omega.positionInWindow?(vector)
-    #     return Omega.positionInWindow?(vector.x, vector.y)
-    # end
+    def Omega.position_in_window?(vector, offset)
+        zone = Rectangle.new(-offset.x, -offset.y, Omega.width + offset.x * 2, Omega.height + offset.y * 2)
+        return zone.contains?(vector)
+    end
 end

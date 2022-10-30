@@ -93,8 +93,16 @@ module Omega
             return Vector2.new(@x + vector.x, @y + vector.y)
         end
 
+        def -(vector)
+            return Vector2.new(@x - vector.x, @y - vector.y)
+        end
+
         def *(scalar)
             return Vector2.new(@x * scalar, @y * scalar)
+        end
+
+        def to_s()
+            return "Vector2(x: " + @x.to_s + ", y: " + @y.to_s + ")"
         end
 
         def update_easing
@@ -145,6 +153,10 @@ module Omega
 
         def *(scalar)
             return Vector3.new(@x * scalar, @y * scalar, @z * scalar)
+        end
+
+        def to_s()
+            return "Vector3(x: " + @x.to_s + ", y: " + @y.to_s + ", z: " + @z.to_s + ")"
         end
     end
 

@@ -35,7 +35,7 @@ class TestState < Omega::State
 
         # @emitter = LinearEmitter.new(@bullets, Omega::Vector2.new(0, 100), Omega::Vector2.new(1000, 100)).setSpeed(5).setBulletNumber(20)
     end
-  
+
     def update()
         if (Omega.just_pressed(Gosu::KB_SPACE))
             if (Omega.paused?)
@@ -57,7 +57,7 @@ class TestState < Omega::State
             bullet.update()
         end
     end
-  
+
     def draw
         $camera.draw do
             @curve.draw(25)
@@ -84,42 +84,55 @@ end
 
 class OtherTestState < Omega::State
     def load
-        m = MixedCastBehaviour.new()
+        @circles = []
 
-        m.add_behaviour(
-            ParametricBehaviour.new
-                .set_limits(0, 200)
-                .set_color(Omega::Color.new(rand(0..255), rand(0..255), rand(0..255)))
-                .set_step(2)
-                .set_lifetime(200)
-        )
+        a = 0
+        for i in 0..20
+            m = MixedCastBehaviour.new()
 
-        for i in 0..2
             m.add_behaviour(
-                BasicCastBehaviour.new
-                    .set_angle_speed(20)
-                    .set_min_scale(0.2)
-                    .set_max_scale(4)
-                    .set_scale_speed(0.3)
+                ParametricBehaviour.new
+                    .set_limits(-200, 200)
                     .set_color(Omega::Color.new(rand(0..255), rand(0..255), rand(0..255)))
-                    .set_lifetime(30))
+                    .set_step(2)
+                    .set_constants(a, 2, a)
+                    .set_t(200)
+                    .set_go_up(false)
+                    .set_lifetime(2000)
+            )
+
+            for i in 0..2
+                m.add_behaviour(
+                    BasicCastBehaviour.new
+                        .set_angle_speed(20)
+                        .set_min_scale(0.2)
+                        .set_max_scale(4)
+                        .set_scale_speed(0.2)
+                        .set_color(Omega::Color.new(rand(0..255), rand(0..255), rand(0..255)))
+                        .set_lifetime(30))
+            end
+
+           circle = CastCircle.new("assets/textures/misc/main_spell.png", m)
+           circle.position = Omega::Vector3.new(Omega.width / 2, Omega.height / 2, 0)
+
+           a += 2 * 0.5
+
+           @circles << circle
         end
 
-       @circle = CastCircle.new(
-            "assets/textures/misc/main_spell.png",
-            m)
-
-
-       @circle.position = Omega::Vector3.new(400, 500, 0)
     end
 
     def update
-        @circle.update
+      @circles.each do |circle|
+        circle.update
+      end
     end
 
     def draw
         $camera.draw do
-            @circle.draw
+          @circles.each do |circle|
+            circle.draw
+          end
         end
     end
 

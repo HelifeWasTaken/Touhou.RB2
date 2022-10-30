@@ -24,8 +24,42 @@ module Omega
         return percentage(v, count) * ratio.to_f
     end
 
+    def Omega.lerp(s, d, p)
+      return (s - d) * p
+    end
+
+    def Omega.v2_lerp(s, d, p)
+      return Omega::Vector2.new(Omega.lerp(s.x, d.x, p), Omega.lerp(s.x, d.x, p))
+    end
+
+    def Omega.v3_lerp(s, d, p, ignore_z=false)
+      v2 = Omega.v2_lerp(s, d, p)
+      if ignore_z
+        z = Omega.lerp(s.z, d.z, p)
+      else
+        z = s.z
+      end
+      return Omega::Vector3.new(v2.x, v2.y, z)
+    end
+
     def Omega.clamp(v, min, max)
         return [min, [v, max].min].max
+    end
+
+    def Omega.max(a, b)
+      if a > b
+        return a
+      else
+        return b
+      end
+    end
+
+    def Omega.min(a, b)
+      if b < a
+        return b
+      else
+        return a
+      end
     end
 
     def Omega.draw_progress_bar(x, y, z, width, height, backcolor, frontcolor, current, max, border = 2)

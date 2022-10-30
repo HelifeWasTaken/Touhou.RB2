@@ -2,12 +2,14 @@ class CastCircle < Omega::Sprite
 
     attr_accessor :tick, :lifetime, :behaviour, :caster
 
-    def initialize(filename, behaviour=nil, caster=nil)
+    def initialize(filename, behaviour=nil, caster=nil,
+                   use_interpolation_with_caster=true)
         super(filename)
         @lifetime = 0
         @tick = 0
         @behaviour = behaviour
         @setuped = false
+        @use_interpolaion_with_caster = use_interpolation_with_caster
 
         self.position = Omega::Vector3.new(100, 100)
         self.set_origin(0.5)
@@ -41,7 +43,12 @@ class CastCircle < Omega::Sprite
         @tick += 1
 
         if not caster.nil?
+          if @use_interpolation_with_caster
+            self.position = Omega.v3_lerp(self.position, caster.position,
+                  Omega.percentage(@tick, @lifetime), true)
+          else
             self.position = caster.position
+          end
         end
     end
 
@@ -227,7 +234,7 @@ class ParametricBehaviour < CastBehaviour
 
     # https://www.geogebra.org/m/f8MDV6YS
     def initialize(a=5, b=1.8, n=5, t=1,
-                    go_up=false,
+                    go_up=true,
                     min_t=-50, max_t=50,
                     step=0.1,
                     lifetime=400,
@@ -238,7 +245,7 @@ class ParametricBehaviour < CastBehaviour
         @b = b
         @t = n
         @n = t
-        @go_up = false
+        @go_up = true
         @min_t = min_t
         @max_t = max_t
         @step = step
@@ -267,11 +274,26 @@ class ParametricBehaviour < CastBehaviour
         self
     end
 
-    def set_constants(a, b, n, t)
+    def set_constants(a=nil, b=nil, n=nil)
+      if not a.nil?
         @a = a
+      end
+      if not b.nil?
         @b = b
+      end
+      if not n.nil?
         @n = n
+      end
+      self
+    end
 
+    def set_t(t)
+      @t = t
+      self
+    end
+
+    def set_go_up(go_up)
+        @go_up = go_up
         self
     end
 
@@ -285,9 +307,9 @@ class ParametricBehaviour < CastBehaviour
 
     def update(cast)
         if @go_up
-            @t += @step
+          @t += @step
         else
-            @t -= @step
+          @t -= @step
         end
 
         cast.color = @color
@@ -302,6 +324,46 @@ class ParametricBehaviour < CastBehaviour
         cast.position = curve + @origin
         cast.angle = @t * 180 / Math::PI
     end
+
+end
+
+class CastSetCasterBehaviour < CastBehaviour
+
+  def initialize(caster)
+    super(0)
+    @caster = caster
+  end
+
+  def update(cast)
+    cast.caster = cast
+  end
+
+end
+
+class CastSetTransformBehaviour < CastBehaviour
+
+  def initialize(x=nil, y=nil, scale=nil, angle=nil)
+    super(0)
+    @x = x
+    @y = y
+    @scale = scale
+    @angle = angle
+  end
+
+  def update(caster)
+    if not @x.nil?
+      caster.position.x = @x
+    end
+    if not @y.nil?
+      caster.position.y = @y
+    end
+    if not @scale.nil?
+      caster.scale = @scale
+    end
+    if not @angle.nil?
+      caster.angle = @angle
+    end
+  end
 
 end
 
@@ -328,7 +390,6 @@ class MixedCastBehaviour
 
     def update(cast)
         @behaviours[@index].update(cast)
-        puts @behaviours[@index].lifetime, " vs ", cast.tick
         if @behaviours[@index].lifetime < cast.tick
             @index = Omega.clamp(@index + 1, 0, @behaviours.size - 1)
         end

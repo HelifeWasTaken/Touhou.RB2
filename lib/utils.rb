@@ -16,6 +16,18 @@ module Omega
         return (vec2.x - vec1.x)**2 + (vec2.y - vec1.y)**2
     end
 
+    def Omega.percentage(v, count)
+        return v.to_f / count.to_f
+    end
+
+    def Omega.ratio(v, count, ratio)
+        return percentage(v, count) * ratio.to_f
+    end
+
+    def Omega.clamp(v, min, max)
+        return [min, [v, max].min].max
+    end
+
     def Omega.draw_progress_bar(x, y, z, width, height, backcolor, frontcolor, current, max, border = 2)
         final_width = 0
         final_width = (width.to_f/max) * current if max != 0

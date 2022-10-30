@@ -93,6 +93,10 @@ module Omega
             return Vector2.new(@x + vector.x, @y + vector.y)
         end
 
+        def -(vector)
+            return Vector2.new(@x - vector.x, @y - vector.y)
+        end
+
         def *(scalar)
             return Vector2.new(@x * scalar, @y * scalar)
         end
@@ -155,8 +159,8 @@ module Omega
             return self
         end
 
-        def distance2d(vec)
-            return Gosu.distance(@x, @y, vec.x, vec.y)
+        def distance(vec)
+            return Math::sqrt((@x - vec.x) ** 2 + (@y - vec.y) ** 2 + (@z - vec.z) ** 2)
         end
 
         def distance(vec)

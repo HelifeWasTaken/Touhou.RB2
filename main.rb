@@ -16,15 +16,22 @@ class TestState < Omega::State
         @bullets = [];
 
 
-        @bullets << SplitBullet.new("assets/textures/bullet/red_warp.png")
-            .setAngle(rand(0..180))
-            .setSpeed(15)
-            .setSplitNumber(10)
-            .setLifespan(50)
-            .setSplit(Bullet.new("assets/textures/bullet/red_blade.png"))
-            .setSink(@bullets)
-            .setDepth(2)
-            .setSplitFactor(0.55);
+        # @bullets << SplitBullet.new("assets/textures/bullet/red_warp.png")
+        #     .set_angle(rand(0..180))
+        #     .set_speed(15)
+        #     .set_split_number(10)
+        #     .set_lifespan(50)
+        #     .set_split(Bullet.new("assets/textures/bullet/red_blade.png"))
+        #     .set_sink(@bullets)
+        #     .set_depth(2)
+        #     .set_split_factor(0.55);
+        
+            # Omega::draw_line(array[i - 1].toVector3, array[i].toVector3)
+        @curve = QuadraticCurve.new().set_start(Omega::Vector2.new(100, 100)).set_end(Omega::Vector2.new(200, 200)).set_control(Omega::Vector2.new(100, 200))
+        @curve2 = QuadraticCurve.new().set_start(Omega::Vector2.new(200, 200)).set_end(Omega::Vector2.new(300, 100)).set_control(Omega::Vector2.new(300, 200))
+        @curve3 = QuadraticCurve.new().set_start(Omega::Vector2.new(300, 100)).set_end(Omega::Vector2.new(400, 200)).set_control(Omega::Vector2.new(400, 100))
+        # @fun = Funnel.new(@curve, @curve2, @curve3)
+        # @fun = LinearCurve.new().set_start(Omega::Vector2.new(200, 200)).set_end(Omega::Vector2.new(500, 500))
 
         # @emitter = LinearEmitter.new(@bullets, Omega::Vector2.new(0, 100), Omega::Vector2.new(1000, 100)).setSpeed(5).setBulletNumber(20)
     end
@@ -53,6 +60,10 @@ class TestState < Omega::State
 
     def draw
         $camera.draw do
+            @curve.draw(25)
+            @curve2.draw(25)
+            @curve3.draw(25)
+            # @fun.draw(50)
             for bullet in @bullets
                 bullet.draw()
             end

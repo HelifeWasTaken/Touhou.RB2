@@ -1,7 +1,7 @@
 # Epitech Game Jam - Touhou.RB
 A Touhou fangame for the Epitech Game Jam 2022
 
-GameJam Theme: Blue
+GameJam DevTober
 
 ## Tools used
 - Ruby

@@ -1,10 +1,24 @@
-HITBOX_NO_TYPE = -1
+module HitboxType
+    HITBOX_NO_TYPE = -1
+    #---
+    BULLET = 1
+    PLAYER_BULLET = BULLET & 256
+    ENEMY_BULLET = BULLET & 512
+    #---
+    PLAYER = 2
+    ENEMY = 4
+    #---
+
+    def isBullet(type)
+        return type & BULLET != 0
+    end
+end
 
 class Hitbox
 
   attr :x, :y, :w, :h, :type
 
-  def initialize(x, y, w, h, type = HITBOX_NO_TYPE, owner = nil)
+  def initialize(x, y, w, h, type = HitboxType::HITBOX_NO_TYPE, owner = nil)
     @x = x
     @y = y
     @w = w
@@ -184,10 +198,10 @@ class CollidableEntity
       # ...
       
       #assume type x, y, w, h and type are set, accesible and exists
-      @rect_collision = Omega::Rect.new(x, y, w, h)
+      @rect_collision = Omega::Rectangle.new(x, y, w, h)
 
-      @collision = Hitbox.new(@rect_collision.x, @rect_collision.y,
-                              @rect_collision.w, @rect_collision.h, type, child)
+      @collision = Hitbox.new(@rect_collision.position.x, @rect_collision.position.y,
+                              @rect_collision.width, @rect_collision.height, type, child)
   end
 
   def on_collision(other)
@@ -195,17 +209,15 @@ class CollidableEntity
   end
 
   def update_collider_position(x, y)
-      @rect_collision.x = x
-      @rect_collision.y = y
-      @collision.update_rect(@rect_collision.x, @rect_collision.y,
-                            @rect_collision.w, @rect_collision.h)
+      @rect_collision.position.x = x
+      @rect_collision.position.y = y
+      @collision.set_position(x, y)
   end
 
   def update_collider_size(w, h)
-      @rect_collision.w = w
-      @rect_collision.h = h
-      @collision.update_rect(@rect_collision.x, @rect_collision.y,
-                            @rect_collision.w, @rect_collision.h)
+      @rect_collision.width = w
+      @rect_collision.height = h
+      @collision.set_size(w, h)
   end
 
   def update_collider(x, y, w, h)
@@ -213,6 +225,36 @@ class CollidableEntity
     update_collider_size(w, h)
   end
 
+  def draw()
+    @collision.draw()
+  end
+
+  def copy(owner)
+    return CollidableEntity.new(owner, @collision.x, @collision.y, @collision.w, @collision.h, @collision.type)
+  end
+end
+
+class BulletCollider < CollidableEntity
+
+    def initialize(child, x, y, w, h)
+        super(child, x, y, w, h, HitboxType::BULLET)
+    end
+
+    def on_collision(other)
+        return if (HitboxType::isBullet(other.type))
+    end
+
+    def set_side(enemy = false)
+        if enemy
+            self.collision.type = HitboxType::ENEMY_BULLET
+        else
+            self.collision.type = HitboxType::PLAYER_BULLET
+        end
+    end
+
+    def is_enemy?
+        return self.collision.type == HitboxType::ENEMY_BULLET
+    end
 end
 
 #class Player < CollidableEntity

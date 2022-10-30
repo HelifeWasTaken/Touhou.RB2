@@ -52,6 +52,10 @@ module Omega
         def *(scalar)
             return Vector2.new(@x * scalar, @y * scalar)
         end
+
+        def to_s()
+            return "Vector2(x: " + @x.to_s + ", y: " + @y.to_s + ")"
+        end
     end
 
     class Vector3
@@ -86,6 +90,10 @@ module Omega
 
         def *(scalar)
             return Vector3.new(@x * scalar, @y * scalar, @z * scalar)
+        end
+
+        def to_s()
+            return "Vector3(x: " + @x.to_s + ", y: " + @y.to_s + ", z: " + @z.to_s + ")"
         end
     end
 

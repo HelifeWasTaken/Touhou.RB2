@@ -1,23 +1,34 @@
 PLAYER_COLLISION_TYPE = 1
 
-class Player < CollidableEntity
+class Entity < CollidableEntity
 
-    def initialize(sprite, controller)
+    attr :sprite, :collision_type, :hp, :hurt_timer, :bullet_emitter
+
+    def initialize(sprite, collision_type,
+                    max_hp=100, hurt_frames=100,
+                    bullet_emitter=[])
         super(self, sprite.position.x, sprite.position.y,
-                sprite.width, sprite.height, PLAYER_COLLISION_TYPE)
+                sprite.width, sprite.height, collision_type)
 
         @sprite = sprite
-        @controller = controller
 
-        @hp = 100
-        @max_hp = 100
+        @max_hp = max_hp
+        @hp = @max_hp
 
-        @bullet_emitter = []
+        @hurt_frames = hurt_frames
         @hurt_timer = 0
+
+        @bullet_emitter = bullet_emitter
     end
 
     def add_bullet_emitter(emitter)
         @bullet_emitter.push(emitter)
+    end
+
+    def shoot
+        @bullet_emitter.each do |emitter|
+            emitter.shoot
+        end
     end
 
     def update
@@ -26,17 +37,7 @@ class Player < CollidableEntity
         update_collider(@sprite.position.x, @sprite.position.y,
                         @sprite.width, @sprite.height)
 
-        if controller.just_pressed(Button.A)
-            @bullet_emitter.each do |emitter|
-                emitter.update(self)
-            end
-        end
-
-        if controller.get_axis(Button::XY)
-            self.position += controller.get_axis(Button::XY) * 5
-        end
-
-        @hurt_timer = Omega.clamp(@hurt_timer - 1, 0, 100)
+        @hurt_timer = Omega.clamp(@hurt_timer - 1, 0, @hurt_frames)
     end
 
     def draw
@@ -50,7 +51,7 @@ class Player < CollidableEntity
     def hurt(damage)
         if can_be_hurt?
             @hp -= damage
-            @hurt_timer = 100
+            @hurt_timer = @hurt_frames
         end
     end
 
@@ -59,48 +60,30 @@ class Player < CollidableEntity
     end
 
     def on_collision(other)
-        #if other.type == ENEMY_COLLISION_TYPE
-        #    hurt(10)
-        #end
+        throw "Entity.on_collision not implemented"
     end
 
 end
 
-class PlayerManager
+class Player < CollidableEntity
 
-    def initialize
-        @players = []
-    end
+    def initialize(sprite, controller)
+        @sprite = sprite
+        @controller = controller
 
-    def add_player(player)
-        @players.push(player)
-    end
+        super(@sprite, CollisionType.PLAYER)
 
-    def get_player(index)
-        @players[index]
-    end
-
-    def can_be_hurt?(index)
-        get_player(index).can_be_hurt?
-    end
-
-    def hurt(index, damage)
-        get_player(index).hurt(damage)
-    end
-
-    def is_alive?(index)
-        get_player(index).is_alive?
     end
 
     def update
-        @players.each do |player|
-            player.update
-        end
-    end
+        super
 
-    def draw
-        @players.each do |player|
-            player.draw
+        if controller.just_pressed(Button.A)
+            shoot
+        end
+
+        if controller.get_axis(Button::XY)
+            self.position += controller.get_axis(Button::XY) * 5
         end
     end
 

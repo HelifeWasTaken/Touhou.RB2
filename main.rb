@@ -60,30 +60,46 @@ class TestState < Omega::State
     end
 end
 
-class OtherTestState < Omega::State
+"
+ .add_behaviour(ParametricBehaviour.new
+                    .set_limits(0, 10)
+                    .set_color(Omega::Color::YELLOW)
+                    .set_step(1.0)
+                    .set_lifetime(300)
+                )
+"
 
+
+
+class OtherTestState < Omega::State
     def load
-        @circle = CastCircle.new(
-            "assets/textures/misc/main_spell.png",
-            800,
+        m = MixedCastBehaviour.new()
+
+        m.add_behaviour(
             ParametricBehaviour.new
                 .set_limits(0, 200)
-                .set_color(Omega::Color::YELLOW)
-                .set_step(1.0)
-       )
+                .set_color(Omega::Color.new(rand(0..255), rand(0..255), rand(0..255)))
+                .set_step(2)
+                .set_lifetime(200)
+        )
+
+        for i in 0..2
+            m.add_behaviour(
+                BasicCastBehaviour.new
+                    .set_angle_speed(20)
+                    .set_min_scale(0.2)
+                    .set_max_scale(4)
+                    .set_scale_speed(0.3)
+                    .set_color(Omega::Color.new(rand(0..255), rand(0..255), rand(0..255)))
+                    .set_lifetime(30))
+        end
+
+       @circle = CastCircle.new(
+            "assets/textures/misc/main_spell.png",
+            m)
+
 
        @circle.position = Omega::Vector3.new(400, 500, 0)
-
-       FixedToInstantCastBehaviour.new()
-                .set_fixed_angle_speed(6)
-                .set_instant_angle_speed(12)
-                .set_scale_target(3)
-                .set_scale_speed(0.4)
-                .set_fixed_color(Omega::Color::RED)
-                .set_instant_color(Omega::Color::BLUE)
-                .set_min_scale(0.5)
-                .set_tick_to_instant(50)
- 
     end
 
     def update

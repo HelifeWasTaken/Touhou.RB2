@@ -138,7 +138,7 @@ class Game < Omega::RenderWindow
         $game = self
 
         $camera = Omega::Camera.new($scale)
-        transition = Omega::FadeTransition.new(5, Omega::Color::copy(Omega::Color::BLACK)) { Omega.set_state(OtherTestState.new) }
+        transition = Omega::FadeTransition.new(5, Omega::Color::copy(Omega::Color::BLACK)) { Omega.set_state(TestPlayState.new) }
         transition.alpha = 255
 
         Omega.launch_transition(transition)

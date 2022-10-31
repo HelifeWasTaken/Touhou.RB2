@@ -52,16 +52,29 @@ def text_after_second_fight
 end
 
 def get_story_array
-    [text_introduction, text_after_first_fight, text_after_second_fight]
+    [
+      [text_introduction, $musics["flandre"]],
+      [text_after_first_fight, $musics["faith"]],
+      [text_after_second_fight, $musics["mokou"]]
+    ]
 end
 
 def get_story_element(index)
   s = get_story_array()[index]
-  s.start if not s.nil?
-  return s
+  if s
+    return s[0].start
+  end
+  return nil
 end
 
 def story_size
   get_story_array.size
 end
 
+def get_fight_music_element(index)
+  m = [$musics["mokou"]][index]
+  if m
+    return m[1]
+  end
+  return nil
+end

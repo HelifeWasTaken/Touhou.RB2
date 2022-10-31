@@ -191,7 +191,6 @@ class Game < Omega::RenderWindow
 
     $tree = nil
 
-<<<<<<< HEAD
     $sounds = {
       "talk" => Gosu::Sample.new("assets/musics/talk.wav")
     }
@@ -201,7 +200,9 @@ class Game < Omega::RenderWindow
       "confrontation" => Gosu::Song.new("assets/musics/confrontation.ogg"),
       "pocket_watch" => Gosu::Song.new("assets/musics/pocket_watch.ogg"),
       "necrofantasia" => Gosu::Song.new("assets/musics/necrofantasia.ogg"),
-      "simple_dialog" =>  Gosu::Song.new("assets/musics/simple_dialog.ogg")
+      "simple_dialog" =>  Gosu::Song.new("assets/musics/simple_dialog.ogg"),
+      "mokou" => Gosu::Song.new("assets/musics/mokou.ogg"),
+      "faith" => Gosu::Song.new("assets/musics/faith.ogg")
     }
 
     $textures = {

@@ -23,7 +23,7 @@ class TestPlayState < Omega::State
 
         # Some music, because why play a game without music huh? Boring.
         @music = Gosu::Song.new("assets/musics/flandres_theme.ogg")
-        @music.play(true)
+        # @music.play(true)
     end
 
     def update

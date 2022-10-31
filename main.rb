@@ -25,7 +25,7 @@ class TestState < Omega::State
         #     .set_sink(@bullets)
         #     .set_depth(2)
         #     .set_split_factor(0.55);
-        
+
             # Omega::draw_line(array[i - 1].toVector3, array[i].toVector3)
         @curve = QuadraticCurve.new().set_start(Omega::Vector2.new(100, 100)).set_end(Omega::Vector2.new(200, 200)).set_control(Omega::Vector2.new(100, 200))
         @curve2 = QuadraticCurve.new().set_start(Omega::Vector2.new(200, 200)).set_end(Omega::Vector2.new(300, 100)).set_control(Omega::Vector2.new(300, 200))
@@ -104,17 +104,6 @@ class TestState < Omega::State
     end
 end
 
-"
- .add_behaviour(ParametricBehaviour.new
-                    .set_limits(0, 10)
-                    .set_color(Omega::Color::YELLOW)
-                    .set_step(1.0)
-                    .set_lifetime(300)
-                )
-"
-
-
-
 class OtherTestState < Omega::State
     def load
         @circles = []
@@ -171,6 +160,27 @@ class OtherTestState < Omega::State
 
 end
 
+class TextState < Omega::State
+
+  def load
+    @story_index = 0
+    @story = get_story_element(0)
+  end
+
+  def update
+    if not @story.nil? and @story.finished
+      @story_index += 1
+      @story = get_story_element(@story_index)
+    end
+    @story.update if not @story.nil?
+  end
+
+  def draw
+    @story.draw if not @story.nil?
+  end
+
+end
+
 class Game < Omega::RenderWindow
 
     $font = Gosu::Font.new(35, name: "assets/SuperLegendBoy.ttf")
@@ -181,11 +191,25 @@ class Game < Omega::RenderWindow
 
     $tree = nil
 
+    $sounds = {
+      "talk" => Gosu::Sample.new("assets/musics/talk.wav")
+    }
+
+    $musics = {
+      "flandre" => Gosu::Song.new("assets/musics/flandres_theme.ogg"),
+      "confrontation" => Gosu::Song.new("assets/musics/confrontation.ogg")
+    }
+
+    $textures = {
+      "marisa" => "./assets/talk/marisa.png",
+      "t1" => "./assets/talk/t1.png"
+    }
+
     def load
         $game = self
 
         $camera = Omega::Camera.new($scale)
-        transition = Omega::FadeTransition.new(5, Omega::Color::copy(Omega::Color::BLACK)) { Omega.set_state(TestState.new) }
+        transition = Omega::FadeTransition.new(5, Omega::Color::copy(Omega::Color::BLACK)) { Omega.set_state(TextState.new) }
         transition.alpha = 255
 
         Omega.launch_transition(transition)

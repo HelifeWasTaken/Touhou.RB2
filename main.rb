@@ -5,7 +5,7 @@ forbidden_files = [
     "push_that.rb"
 ]
 
-(Dir["*.rb"] + Dir["src/*.rb"] + Dir["src/gui/*.rb"] + Dir["src/gui/widget/*.rb"].reverse).each do |file|
+(Dir["*.rb"] + Dir["src/*.rb"] + Dir["src/gui/*.rb"] + Dir["src/state/*.rb"] + Dir["src/gui/widget/*.rb"].reverse).each do |file|
     require_relative file if file != File.basename(__FILE__) and not forbidden_files.include?(file)
 end
 
@@ -181,11 +181,15 @@ class Game < Omega::RenderWindow
 
     $tree = nil
 
+    $bullet_sink = []
+
+    $score = 0
+
     def load
         $game = self
 
         $camera = Omega::Camera.new($scale)
-        transition = Omega::FadeTransition.new(5, Omega::Color::copy(Omega::Color::BLACK)) { Omega.set_state(TestState.new) }
+        transition = Omega::FadeTransition.new(5, Omega::Color::copy(Omega::Color::BLACK)) { Omega.set_state(PlayState.new) }
         transition.alpha = 255
 
         Omega.launch_transition(transition)

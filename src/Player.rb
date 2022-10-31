@@ -68,18 +68,108 @@ end
 class Player
 
     def initialize(controller)
-        @sprite = Omega::SpriteSheet.new("AAAAAA");
+        @sprite = Omega::SpriteSheet.new("assets/textures/character/kek.png", 48, 48);
+        @sprite.set_trail(true)
         @controller = controller
 
-        @_emitter
+        @_emitter = PlayerEmitter.new()
+
+        @sprite.add_animation("idle", [0, 1, 2, 3])
+        @sprite.add_animation("move", [8, 9, 10, 11, 12, 13, 14, 15])
+
+        @sprite.play_animation("idle")
+        @sprite.set_origin(0.5)
+
+        @sprite.position.z = 50000
+
+        @hitbox = CollidableEntity.new(self, 0, 0, 12, 12, HitboxType::PLAYER)
     end
 
     def update()
+        axis = Omega::Vector2.new(
+            (Omega.pressed(Gosu::KB_D) ? 1 : 0) - (Omega.pressed(Gosu::KB_A) ? 1 : 0),
+            (Omega.pressed(Gosu::KB_S) ? 1 : 0) - (Omega.pressed(Gosu::KB_W) ? 1 : 0)
+        )
 
+        if axis.x == 0
+            @sprite.play_animation("idle")
+        else
+            if (axis.x != 0)
+                @sprite.play_animation("move", false) if @sprite.get_current_animation != "move"
+            end
+            if axis.x > 0
+                @sprite.flip.x = true
+            elsif axis.x < 0
+                @sprite.flip.x = false
+            end
+        end
+
+        move((axis * 5).to_vector3)
+
+        if (@sprite.position.x < 0)
+            @sprite.position.x = 0
+        end
+        if (@sprite.position.x > 800)
+            @sprite.position.x = 800
+        end
+        if (@sprite.position.y < 0)
+            @sprite.position.y = 0
+        end
+        if (@sprite.position.y > 1080)
+            @sprite.position.y = 1080
+        end
+
+        @_emitter.emit if Omega.pressed(Gosu::KB_SPACE) and not @_emitter.nil? and not @_emitter.is_emitting?
+        @_emitter.update
+        
+    end
+
+    def set_position(pos)
+        @sprite.position = pos.to_vector3
+        @_emitter.set_position(pos)
+        @hitbox.update_collider_position(pos.x - @hitbox.collision.w / 2.0, pos.y - @hitbox.collision.h / 2.0)
+    end
+
+    def move(vec)
+        @sprite.position += vec
+        @_emitter.set_position(@sprite.position.to_vector2 + vec)
+        @hitbox.update_collider_position(@sprite.position.x - @hitbox.collision.w / 2.0, @sprite.position.y - @hitbox.collision.h / 2.0)
     end
 
     def draw()
+        @sprite.draw
+        # @hitbox.draw
+    end
+end
 
+class PlayerEmitter < BulletEmitter
+
+    def initialize()
+        super($bullet_sink)
+
+        @pos = nil
+    end
+
+    def emit(data = {})
+        super(data)
+        
+        @tick = 0
+        Bullet.new("assets/textures/bullet/kek_bullet.png").set_sink($bullet_sink).set_speed(25).set_angle(-90).set_position(@pos - Omega::Vector2.new(0, 6)).spawn()
+    end
+
+    def update()
+        super()
+        if @tick >= 5
+            @emitting = false
+        end
+    end
+
+    def is_emitting?()
+        return @emitting
+    end
+
+    def set_position(pos)
+        @pos = pos
     end
 end
 

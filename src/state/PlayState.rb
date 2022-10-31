@@ -25,6 +25,12 @@ class PlayState < Omega::State
             panel
         )
 
+        # Some "Mode 7" clouds
+        @ptex = PerspectiveTexture.new("assets/night_sky_filter_forge.png", Omega.width, Omega.height)
+        @ptex.perspective_modifier = 50
+        @ptex.base_perspective = 1.45
+        @ptex.y = Omega.height - 500
+
         @tick = 0
 
     end
@@ -35,6 +41,7 @@ class PlayState < Omega::State
         @gui.update
         @parallax.position.y += 1
         @player.update
+        @ptex.pz -= 1
         for bullet in $bullet_sink
             bullet.update()
         end
@@ -43,6 +50,7 @@ class PlayState < Omega::State
 
     def draw
         @parallax.draw
+        @ptex.draw
         @player.draw
         for bullet in $bullet_sink
             bullet.draw()

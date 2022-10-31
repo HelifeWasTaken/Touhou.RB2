@@ -4,6 +4,7 @@ def text_introduction
       TextBoxHandler.new
         .set_left_character($textures["marisa"], false)
         .add_text("It's bad of me to keep borrowing books,", true)
+        .add_dialog_music($musics["simple_dialog"])
         .add_text("I don't even know where I am", true)
         .add_text("...", true)
     ).add_dialog(
@@ -11,7 +12,7 @@ def text_introduction
         .set_right_character($textures["t1"], false)
         .set_left_character($textures["marisa"], false)
         .add_text("Who are you..?", true)
-        .add_dialog_music($musics["confrontation"])
+        .add_dialog_music($musics["pocket_watch"])
         .add_text("I am Sonia, a lost Youkai", false)
         .add_text("Descendant of the Rinnosuke family", false)
         .add_text("Now DIE!", false)
@@ -38,7 +39,7 @@ def text_after_second_fight
         .set_left_character($textures["marisa"], false)
         .set_right_character($textures["t1"], false)
         .add_text("You are starting to annoy me!!", false)
-        .add_dialog_music($musics["confrontation"])
+        .add_dialog_music($musics["necrofantasia"])
         .add_text("Can you just die?!!", false)
         .add_text("Welp no I still have books to read", true)
         .add_text("Wait what are you doing???!", true)

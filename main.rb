@@ -197,7 +197,10 @@ class Game < Omega::RenderWindow
 
     $musics = {
       "flandre" => Gosu::Song.new("assets/musics/flandres_theme.ogg"),
-      "confrontation" => Gosu::Song.new("assets/musics/confrontation.ogg")
+      "confrontation" => Gosu::Song.new("assets/musics/confrontation.ogg"),
+      "pocket_watch" => Gosu::Song.new("assets/musics/pocket_watch.ogg"),
+      "necrofantasia" => Gosu::Song.new("assets/musics/necrofantasia.ogg"),
+      "simple_dialog" =>  Gosu::Song.new("assets/musics/simple_dialog.ogg")
     }
 
     $textures = {

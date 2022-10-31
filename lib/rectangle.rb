@@ -36,9 +36,13 @@ module Omega
             Gosu.draw_rect(@position.x, @position.y, @width, @height, @color, @position.z)
         end
 
-        def to_s
+        def s
           return "Rectangle(x: " + @position.x.to_s + ", y: " + @position.y.to_s + ", h: " + @height.to_s + ", w: " + @width.to_s + ")"
         end
+
+        # def to_s
+        #   return "Rectangle(x: " + @position.x.to_s + ", y: " + @position.y.to_s + ", h: " + @height.to_s + ", w: " + @width.to_s + ")"
+        # end
 
     end
 

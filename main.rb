@@ -5,7 +5,7 @@ forbidden_files = [
     "push_that.rb"
 ]
 
-(Dir["*.rb"] + Dir["src/*.rb"]).each do |file|
+(Dir["*.rb"] + Dir["src/*.rb"] + Dir["src/gui/*.rb"] + Dir["src/gui/widget/*.rb"].reverse).each do |file|
     require_relative file if file != File.basename(__FILE__) and not forbidden_files.include?(file)
 end
 
@@ -30,8 +30,35 @@ class TestState < Omega::State
         @curve = QuadraticCurve.new().set_start(Omega::Vector2.new(100, 100)).set_end(Omega::Vector2.new(200, 200)).set_control(Omega::Vector2.new(100, 200))
         @curve2 = QuadraticCurve.new().set_start(Omega::Vector2.new(200, 200)).set_end(Omega::Vector2.new(300, 100)).set_control(Omega::Vector2.new(300, 200))
         @curve3 = QuadraticCurve.new().set_start(Omega::Vector2.new(300, 100)).set_end(Omega::Vector2.new(400, 200)).set_control(Omega::Vector2.new(400, 100))
-        # @fun = Funnel.new(@curve, @curve2, @curve3)
-        # @fun = LinearCurve.new().set_start(Omega::Vector2.new(200, 200)).set_end(Omega::Vector2.new(500, 500))
+
+        @button = GUI::Button.new().set_size(Omega::Vector2.new(128, 30)).set_scale(Omega::Vector2.new(2, 2)).set_position(Omega::Vector2.new(100, 100)).set_texture("assets/textures/gui/button.png")
+        @text = GUI::Text.new().set_text("Hello").set_size(Omega::Vector2.new(256, 20)).set_position(Omega::Vector2.new(0, 10)).set_font($font).set_alignment(GUI::Text::Alignment::CENTER)
+
+        @button.on_click do |button|
+            puts button
+            button.disable
+        end
+
+        a = GUI::Button.new().set_size(Omega::Vector2.new(16, 16)).set_scale(Omega::Vector2.new(2, 2)).set_position(Omega::Vector2.new(100, 450)).set_texture("assets/textures/gui/button.png")
+
+        a.on_click do
+            @button.enable
+        end
+
+        @button.add(@text)
+
+        print "THE ORIGIN: ", @button, " ", @button._rect, " ", @button._rect.s, "\n"
+
+        group = GUI::Group.new().set_position(Omega::Vector2.new(500, 100)).add(@button.clone())
+
+        print "THE ORIGIN: ", @button, " ", @button._rect, " ", @button._rect.s, "\n"
+
+        @gui = Gui.new().set_position(Omega::Vector2.new(0, 0)).add(@button, a, group)
+
+        print "THE ORIGIN: ", @button, " ", @button._rect, " ", @button._rect.s, "\n"
+
+        # text = GUI::Text.new().set_text("Hello").set_font($font).set_size(Omega::Vector2.new(500, 10)).set_alignment(GUI::Text::Alignment::RIGHT)
+        # @gui.add(text)
 
         # @emitter = LinearEmitter.new(@bullets, Omega::Vector2.new(0, 100), Omega::Vector2.new(1000, 100)).setSpeed(5).setBulletNumber(20)
     end
@@ -53,6 +80,12 @@ class TestState < Omega::State
             # Omega.play() if Omega.paused?
         # end
         return if (Omega.paused?)
+        if @button.enabled?
+            @text.set_text("Enabled")
+        else
+            @text.set_text("Disabled")
+        end
+        @gui.update()
         for bullet in @bullets
             bullet.update()
         end
@@ -63,7 +96,7 @@ class TestState < Omega::State
             @curve.draw(25)
             @curve2.draw(25)
             @curve3.draw(25)
-            # @fun.draw(50)
+            @gui.draw()
             for bullet in @bullets
                 bullet.draw()
             end
@@ -139,6 +172,9 @@ class OtherTestState < Omega::State
 end
 
 class Game < Omega::RenderWindow
+
+    $font = Gosu::Font.new(35, name: "assets/SuperLegendBoy.ttf")
+
     $scale = 1
     $camera = Omega::Camera.new()
     $camera.scale = Omega::Vector2.new($scale, $scale)
@@ -149,7 +185,7 @@ class Game < Omega::RenderWindow
         $game = self
 
         $camera = Omega::Camera.new($scale)
-        transition = Omega::FadeTransition.new(5, Omega::Color::copy(Omega::Color::BLACK)) { Omega.set_state(TestPlayState.new) }
+        transition = Omega::FadeTransition.new(5, Omega::Color::copy(Omega::Color::BLACK)) { Omega.set_state(TestState.new) }
         transition.alpha = 255
 
         Omega.launch_transition(transition)

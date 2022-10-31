@@ -65,26 +65,44 @@ class Entity < CollidableEntity
 
 end
 
-class Player < CollidableEntity
+class Player
 
-    def initialize(sprite, controller)
-        @sprite = sprite
+    def initialize(controller)
+        @sprite = Omega::SpriteSheet.new("AAAAAA");
         @controller = controller
 
-        super(@sprite, CollisionType.PLAYER)
+        @_emitter
+    end
+
+    def update()
 
     end
 
-    def update
-        super
+    def draw()
 
-        if controller.just_pressed(Button.A)
-            shoot
-        end
-
-        if controller.get_axis(Button::XY)
-            self.position += controller.get_axis(Button::XY) * 5
-        end
     end
-
 end
+
+# class Player < CollidableEntity
+
+#     def initialize(sprite, controller)
+#         @sprite = sprite
+#         @controller = controller
+
+#         super(@sprite, CollisionType.PLAYER)
+
+#     end
+
+#     def update
+#         super
+
+#         if controller.just_pressed(Button.A)
+#             shoot
+#         end
+
+#         if controller.get_axis(Button::XY)
+#             self.position += controller.get_axis(Button::XY) * 5
+#         end
+#     end
+
+# end

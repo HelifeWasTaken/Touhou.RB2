@@ -13,7 +13,7 @@ class BossSoniaVA < Omega::SpriteSheet
 
         @player = player
         @current_pattern = BASIC_SHOTS
-        @phase = 0
+        @phase = 1
 
         @phase_patterns = {
             BASIC_SHOTS => [Omega::Vector2.new(-300, 0),

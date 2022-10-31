@@ -41,6 +41,10 @@ module Omega
         def self.copy(color)
             ncolor = Omega::Color.new(color.alpha, color.red, color.green, color.blue)
         end
+
+        def to_s
+            return color_string
+        end
     end
 
 end

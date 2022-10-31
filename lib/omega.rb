@@ -105,9 +105,13 @@ module Omega
             return Vector2.new(@x - other.x, @y - other.y)
         end
 
-        def to_s()
+        def s()
             return "Vector2(x: " + @x.to_s + ", y: " + @y.to_s + ")"
         end
+
+        # def to_s()
+        #     return "Vector2(x: " + @x.to_s + ", y: " + @y.to_s + ")"
+        # end
 
         def update_easing
             return if not @ease or not @ease_position
@@ -159,7 +163,7 @@ module Omega
             return self
         end
 
-        def distance(vec)
+        def distance2d(vec)
             return Math::sqrt((@x - vec.x) ** 2 + (@y - vec.y) ** 2 + (@z - vec.z) ** 2)
         end
 

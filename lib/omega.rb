@@ -167,8 +167,8 @@ module Omega
             return Math::sqrt((@x - vec.x) ** 2 + (@y - vec.y) ** 2 + (@z - vec.z) ** 2)
         end
 
-        def distance(vec)
-            return Math::sqrt((@x - vec.x) ** 2 + (@y - vec.y) ** 2 + (@z - vec.z) ** 2)
+        def distance2d(vec)
+            return Math::sqrt((@x - vec.x) ** 2 + (@y - vec.y) ** 2)
         end
 
         def +(vector)

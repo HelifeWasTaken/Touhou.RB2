@@ -1,4 +1,0 @@
-Boss 1 "Sonia von Auersperg":
-- Pattern 1 : Shoots basiques vers le joueur et le perso se déplace 1 fois de gauche à droite
-- Pattern 2 : Revient sur le centre de l'écran, fait apparaitre des couteaux et les envoies en X en direction du joueur
-- Pattern 3 : Explosion de bullet circulaire

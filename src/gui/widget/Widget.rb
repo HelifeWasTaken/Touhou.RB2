@@ -157,16 +157,20 @@ module GUI
         def idle()
             self._idle.call(self) if not self._idle.nil?
         end
+
         def hover()
             self._hover.call(self) if not self._hover.nil?
         end
+
         def pressed()
             self._was_pressed = true
             self._pressed.call(self) if not self._pressed.nil?
         end
+
         def click()
             self._click.call(self) if not self._click.nil?
         end
+
         def input()
             self._input.call(self) if not self._input.nil?
         end

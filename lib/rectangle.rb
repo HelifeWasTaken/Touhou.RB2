@@ -10,6 +10,14 @@ module Omega
             @height = height
         end
 
+        def initialize_copy(other)
+            other.position = @position.clone
+            other.color = @color.clone
+            other.width = @width
+            other.height = @height
+            super(other)
+        end
+
         def collides?(rect)
             if @position.x > rect.position.x + rect.width or
                 @position.x + @width < rect.position.x or

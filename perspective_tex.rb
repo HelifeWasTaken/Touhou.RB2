@@ -71,11 +71,11 @@ class PerspectiveTexture
             x = @x + (@surface_width - width)*@middle + @px * (perspective+@base_scale_x)
             x %= width if horizontal_loop
             color = Gosu::Color.new(alpha, 255, 255, 255)
-            line.draw(x, @y + y + @py * perspective, @z + 10 * perspective, perspective+@base_scale_x, height, (($game_boy_filter_enabled) ? $filter_color : color))
+            line.draw(x, @y + y + @py * perspective, 0, perspective+@base_scale_x, height, (($game_boy_filter_enabled) ? $filter_color : color))
 
             @repeat.to_i.times do |i|
-                line.draw(x + (i+1) * width, @y + y + @py * perspective, @z + 10 * perspective, perspective+@base_scale_x, height, (($game_boy_filter_enabled) ? $filter_color : color))
-                line.draw(x - (i+1) * width, @y + y + @py * perspective, @z + 10 * perspective, perspective+@base_scale_x, height, (($game_boy_filter_enabled) ? $filter_color : color))
+                line.draw(x + (i+1) * width, @y + y + @py * perspective, 0, perspective+@base_scale_x, height, (($game_boy_filter_enabled) ? $filter_color : color))
+                line.draw(x - (i+1) * width, @y + y + @py * perspective, 0, perspective+@base_scale_x, height, (($game_boy_filter_enabled) ? $filter_color : color))
             end
 
             ## SPRITE DRAWING

@@ -297,6 +297,10 @@ module Omega
                     not @loop)
         end
 
+        def get_current_animation()
+            return @current_animation
+        end
+
         def pixel_at(x, y)
             @blob ||= {}
             @blob[@current_frame] ||= @frames[@current_frame].to_blob

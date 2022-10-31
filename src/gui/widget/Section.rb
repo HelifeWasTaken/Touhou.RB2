@@ -7,6 +7,11 @@ module GUI
             @widgets = []
         end
 
+        def initialize_copy(other)
+            self.widgets = other.widgets.map { |widget| widget.clone() }
+            super(other)
+        end
+
         def add(*widget)
             @widgets += widget
             return self
@@ -28,9 +33,6 @@ module GUI
         end
 
         def draw()
-            if @active == false
-                return
-            end
             @widgets.each { |widget| widget.draw() }
         end
     end

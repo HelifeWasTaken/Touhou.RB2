@@ -64,25 +64,25 @@ module GUI
                 x_tile_n = (self.size.x.to_f / self.tile_size.x).ceil
                 y_tile_n = (self.size.y.to_f / self.tile_size.y).ceil
                 if (x_tile_n <= 1) and (y_tile_n <= 1)
-                    self._tiles[27 + self._shift].draw(self.position.x, self.position.y, 0, self.scale.x, self.scale.y)
+                    self._tiles[27 + self._shift].draw(self.position.x, self.position.y, 50000000, self.scale.x, self.scale.y)
                 elsif (x_tile_n <= 1) and (y_tile_n > 1)
                     for y in 0...y_tile_n
                         if y == 0
-                            self._tiles[3 + self._shift].draw(self.position.x, self.position.y + y * self.tile_size.y * self.scale.y, 0, self.scale.x, self.scale.y)
+                            self._tiles[3 + self._shift].draw(self.position.x, self.position.y + y * self.tile_size.y * self.scale.y, 50000000, self.scale.x, self.scale.y)
                         elsif y == y_tile_n - 1
-                            self._tiles[19 + self._shift].draw(self.position.x, self.position.y + self.size.y * self.scale.y - self.tile_size.y * self.scale.y, 0, self.scale.x, self.scale.y)
+                            self._tiles[19 + self._shift].draw(self.position.x, self.position.y + self.size.y * self.scale.y - self.tile_size.y * self.scale.y, 50000000, self.scale.x, self.scale.y)
                         else
-                            self._tiles[11 + self._shift].draw(self.position.x, self.position.y + y * self.tile_size.y * self.scale.y, 0, self.scale.x, self.scale.y)
+                            self._tiles[11 + self._shift].draw(self.position.x, self.position.y + y * self.tile_size.y * self.scale.y, 50000000, self.scale.x, self.scale.y)
                         end
                     end
                 elsif (y_tile_n <= 1) and (x_tile_n > 1)
                     for x in 0...x_tile_n
                         if x == 0
-                            self._tiles[24 + self._shift].draw(self.position.x + x * self.tile_size.x * self.scale.x, self.position.y, 0, self.scale.x, self.scale.y)
+                            self._tiles[24 + self._shift].draw(self.position.x + x * self.tile_size.x * self.scale.x, self.position.y, 50000000, self.scale.x, self.scale.y)
                         elsif x == x_tile_n - 1
-                            self._tiles[26 + self._shift].draw(self.position.x + x * self.tile_size.x * self.scale.x, self.position.y, 0, self.scale.x, self.scale.y)
+                            self._tiles[26 + self._shift].draw(self.position.x + x * self.tile_size.x * self.scale.x, self.position.y, 50000000, self.scale.x, self.scale.y)
                         else
-                            self._tiles[25 + self._shift].draw(self.position.x + x * self.tile_size.x * self.scale.x, self.position.y, 0, self.scale.x, self.scale.y)
+                            self._tiles[25 + self._shift].draw(self.position.x + x * self.tile_size.x * self.scale.x, self.position.y, 50000000, self.scale.x, self.scale.y)
                         end
                     end
                 else
@@ -90,27 +90,27 @@ module GUI
                         for y in 0...y_tile_n
                             if x == 0
                                 if y == 0
-                                    self._tiles[0 + self._shift].draw(self.position.x + x * self.tile_size.x * self.scale.x, self.position.y + y * self.tile_size.y * self.scale.y, 0, self.scale.x, self.scale.y)
+                                    self._tiles[0 + self._shift].draw(self.position.x + x * self.tile_size.x * self.scale.x, self.position.y + y * self.tile_size.y * self.scale.y, 50000000, self.scale.x, self.scale.y)
                                 elsif y == y_tile_n - 1
-                                    self._tiles[16 + self._shift].draw(self.position.x + x * self.tile_size.x * self.scale.x, self.position.y + self.size.y * self.scale.y - self.tile_size.y * self.scale.y, 0, self.scale.x, self.scale.y)
+                                    self._tiles[16 + self._shift].draw(self.position.x + x * self.tile_size.x * self.scale.x, self.position.y + self.size.y * self.scale.y - self.tile_size.y * self.scale.y, 50000000, self.scale.x, self.scale.y)
                                 else
-                                    self._tiles[8 + self._shift].draw(self.position.x + x * self.tile_size.x * self.scale.x, self.position.y + y * self.tile_size.y * self.scale.y, 0, self.scale.x, self.scale.y)
+                                    self._tiles[8 + self._shift].draw(self.position.x + x * self.tile_size.x * self.scale.x, self.position.y + y * self.tile_size.y * self.scale.y, 50000000, self.scale.x, self.scale.y)
                                 end
                             elsif x == x_tile_n - 1
                                 if y == 0
-                                    self._tiles[2 + self._shift].draw(self.position.x + self.size.x * self.scale.x - self.tile_size.x * self.scale.x, self.position.y + y * self.tile_size.y * self.scale.y, 0, self.scale.x, self.scale.y)
+                                    self._tiles[2 + self._shift].draw(self.position.x + self.size.x * self.scale.x - self.tile_size.x * self.scale.x, self.position.y + y * self.tile_size.y * self.scale.y, 50000000, self.scale.x, self.scale.y)
                                 elsif y == y_tile_n - 1
-                                    self._tiles[18 + self._shift].draw(self.position.x + self.size.x * self.scale.x - self.tile_size.x * self.scale.x, self.position.y + self.size.y * self.scale.y - self.tile_size.y * self.scale.y, 0, self.scale.x, self.scale.y)
+                                    self._tiles[18 + self._shift].draw(self.position.x + self.size.x * self.scale.x - self.tile_size.x * self.scale.x, self.position.y + self.size.y * self.scale.y - self.tile_size.y * self.scale.y, 50000000, self.scale.x, self.scale.y)
                                 else
-                                    self._tiles[10 + self._shift].draw(self.position.x + self.size.x * self.scale.x - self.tile_size.x * self.scale.x, self.position.y + y * self.tile_size.y * self.scale.y, 0, self.scale.x, self.scale.y)
+                                    self._tiles[10 + self._shift].draw(self.position.x + self.size.x * self.scale.x - self.tile_size.x * self.scale.x, self.position.y + y * self.tile_size.y * self.scale.y, 50000000, self.scale.x, self.scale.y)
                                 end
                             else
                                 if y == 0
-                                    self._tiles[1 + self._shift].draw(self.position.x + x * self.tile_size.x * self.scale.x, self.position.y + y * self.tile_size.y * self.scale.y, 0, self.scale.x, self.scale.y)
+                                    self._tiles[1 + self._shift].draw(self.position.x + x * self.tile_size.x * self.scale.x, self.position.y + y * self.tile_size.y * self.scale.y, 50000000, self.scale.x, self.scale.y)
                                 elsif y == y_tile_n - 1
-                                    self._tiles[17 + self._shift].draw(self.position.x + x * self.tile_size.x * self.scale.x, self.position.y + self.size.y * self.scale.y - self.tile_size.y * self.scale.y, 0, self.scale.x, self.scale.y)
+                                    self._tiles[17 + self._shift].draw(self.position.x + x * self.tile_size.x * self.scale.x, self.position.y + self.size.y * self.scale.y - self.tile_size.y * self.scale.y, 50000000, self.scale.x, self.scale.y)
                                 else
-                                    self._tiles[9 + self._shift].draw(self.position.x + x * self.tile_size.x * self.scale.x, self.position.y + y * self.tile_size.y * self.scale.y, 0, self.scale.x, self.scale.y)
+                                    self._tiles[9 + self._shift].draw(self.position.x + x * self.tile_size.x * self.scale.x, self.position.y + y * self.tile_size.y * self.scale.y, 50000000, self.scale.x, self.scale.y)
                                 end
                             end
                         end

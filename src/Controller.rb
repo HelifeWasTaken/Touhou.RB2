@@ -16,74 +16,72 @@ module Button
     R3 = 14
     JOYSTICK_MAP_BUTTON = [
         [
-            [
-                Gosu::GP_0_UP,
-                Gosu::GP_0_DOWN,
-                Gosu::GP_0_LEFT,
-                Gosu::GP_0_RIGHT,
-                Gosu::GP_0_BUTTON_0,
-                Gosu::GP_0_BUTTON_1,
-                Gosu::GP_0_BUTTON_2,
-                Gosu::GP_0_BUTTON_3,
-                Gosu::GP_0_BUTTON_4,
-                Gosu::GP_0_BUTTON_5,
-                Gosu::GP_0_BUTTON_6,
-                Gosu::GP_0_BUTTON_7,
-                Gosu::GP_0_BUTTON_8,
-                Gosu::GP_0_BUTTON_9,
-                Gosu::GP_0_BUTTON_10
-            ],
-            [
-                Gosu::GP_1_UP,
-                Gosu::GP_1_DOWN,
-                Gosu::GP_1_LEFT,
-                Gosu::GP_1_RIGHT,
-                Gosu::GP_1_BUTTON_0,
-                Gosu::GP_1_BUTTON_1,
-                Gosu::GP_1_BUTTON_2,
-                Gosu::GP_1_BUTTON_3,
-                Gosu::GP_1_BUTTON_4,
-                Gosu::GP_1_BUTTON_5,
-                Gosu::GP_1_BUTTON_6,
-                Gosu::GP_1_BUTTON_7,
-                Gosu::GP_1_BUTTON_8,
-                Gosu::GP_1_BUTTON_9,
-                Gosu::GP_1_BUTTON_10
-            ],
-            [
-                Gosu::GP_2_UP,
-                Gosu::GP_2_DOWN,
-                Gosu::GP_2_LEFT,
-                Gosu::GP_2_RIGHT,
-                Gosu::GP_2_BUTTON_0,
-                Gosu::GP_2_BUTTON_1,
-                Gosu::GP_2_BUTTON_2,
-                Gosu::GP_2_BUTTON_3,
-                Gosu::GP_2_BUTTON_4,
-                Gosu::GP_2_BUTTON_5,
-                Gosu::GP_2_BUTTON_6,
-                Gosu::GP_2_BUTTON_7,
-                Gosu::GP_2_BUTTON_8,
-                Gosu::GP_2_BUTTON_9,
-                Gosu::GP_2_BUTTON_10
-            ],
-            [
-                Gosu::GP_3_UP,
-                Gosu::GP_3_DOWN,
-                Gosu::GP_3_LEFT,
-                Gosu::GP_3_RIGHT,
-                Gosu::GP_3_BUTTON_0,
-                Gosu::GP_3_BUTTON_1,
-                Gosu::GP_3_BUTTON_2,
-                Gosu::GP_3_BUTTON_3,
-                Gosu::GP_3_BUTTON_4,
-                Gosu::GP_3_BUTTON_5,
-                Gosu::GP_3_BUTTON_6,
-                Gosu::GP_3_BUTTON_7,
-                Gosu::GP_3_BUTTON_8,
-                Gosu::GP_3_BUTTON_9,
-                Gosu::GP_3_BUTTON_10
-            ]
+            Gosu::GP_0_UP,
+            Gosu::GP_0_DOWN,
+            Gosu::GP_0_LEFT,
+            Gosu::GP_0_RIGHT,
+            Gosu::GP_0_BUTTON_0,
+            Gosu::GP_0_BUTTON_1,
+            Gosu::GP_0_BUTTON_2,
+            Gosu::GP_0_BUTTON_3,
+            Gosu::GP_0_BUTTON_4,
+            Gosu::GP_0_BUTTON_5,
+            Gosu::GP_0_BUTTON_6,
+            Gosu::GP_0_BUTTON_7,
+            Gosu::GP_0_BUTTON_8,
+            Gosu::GP_0_BUTTON_9,
+            Gosu::GP_0_BUTTON_10
+        ],
+        [
+            Gosu::GP_1_UP,
+            Gosu::GP_1_DOWN,
+            Gosu::GP_1_LEFT,
+            Gosu::GP_1_RIGHT,
+            Gosu::GP_1_BUTTON_0,
+            Gosu::GP_1_BUTTON_1,
+            Gosu::GP_1_BUTTON_2,
+            Gosu::GP_1_BUTTON_3,
+            Gosu::GP_1_BUTTON_4,
+            Gosu::GP_1_BUTTON_5,
+            Gosu::GP_1_BUTTON_6,
+            Gosu::GP_1_BUTTON_7,
+            Gosu::GP_1_BUTTON_8,
+            Gosu::GP_1_BUTTON_9,
+            Gosu::GP_1_BUTTON_10
+        ],
+        [
+            Gosu::GP_2_UP,
+            Gosu::GP_2_DOWN,
+            Gosu::GP_2_LEFT,
+            Gosu::GP_2_RIGHT,
+            Gosu::GP_2_BUTTON_0,
+            Gosu::GP_2_BUTTON_1,
+            Gosu::GP_2_BUTTON_2,
+            Gosu::GP_2_BUTTON_3,
+            Gosu::GP_2_BUTTON_4,
+            Gosu::GP_2_BUTTON_5,
+            Gosu::GP_2_BUTTON_6,
+            Gosu::GP_2_BUTTON_7,
+            Gosu::GP_2_BUTTON_8,
+            Gosu::GP_2_BUTTON_9,
+            Gosu::GP_2_BUTTON_10
+        ],
+        [
+            Gosu::GP_3_UP,
+            Gosu::GP_3_DOWN,
+            Gosu::GP_3_LEFT,
+            Gosu::GP_3_RIGHT,
+            Gosu::GP_3_BUTTON_0,
+            Gosu::GP_3_BUTTON_1,
+            Gosu::GP_3_BUTTON_2,
+            Gosu::GP_3_BUTTON_3,
+            Gosu::GP_3_BUTTON_4,
+            Gosu::GP_3_BUTTON_5,
+            Gosu::GP_3_BUTTON_6,
+            Gosu::GP_3_BUTTON_7,
+            Gosu::GP_3_BUTTON_8,
+            Gosu::GP_3_BUTTON_9,
+            Gosu::GP_3_BUTTON_10
         ]
     ]
 
@@ -145,14 +143,14 @@ class Joystick
     end
 
     def get_button(button)
-        Button.JOYSTICK_MAP_BUTTON[@index][button]
+        Button::JOYSTICK_MAP_BUTTON[@index][button]
     end
 
     def get_axis(axis, value)
         if axis == Axis::XY
             return Omega::Vector2.new(
-                pressed(Button.RIGHT) - pressed(Button.LEFT),
-                pressed(Button.DOWN) - pressed(Button.UP)
+                (pressed(Button::RIGHT) ? 1 : 0) - (pressed(Button::LEFT) ? 1 : 0),
+                (pressed(Button::DOWN) ? 1 : 0) - (pressed(Button::UP) ? 1 : 0)
             )
         elsif axis == Axis::ZR
             throw "Getting ZR axis is not supported"

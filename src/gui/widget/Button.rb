@@ -14,16 +14,16 @@ module GUI
 
             @_shift = 0
 
-            on_idle do
-                @_shift = 0
+            on_idle do |widget|
+                widget._shift = 0
             end
 
-            on_hover do
-                @_shift = 4
+            on_hover do |widget|
+                widget._shift = 4
             end
 
-            on_pressed do
-                @_shift = 32
+            on_pressed do |widget|
+                widget._shift = 36
             end
         end
 

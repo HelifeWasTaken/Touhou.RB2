@@ -57,6 +57,8 @@ class TestState < Omega::State
 
         print "THE ORIGIN: ", @button, " ", @button._rect, " ", @button._rect.s, "\n"
 
+        
+
         # text = GUI::Text.new().set_text("Hello").set_font($font).set_size(Omega::Vector2.new(500, 10)).set_alignment(GUI::Text::Alignment::RIGHT)
         # @gui.add(text)
 

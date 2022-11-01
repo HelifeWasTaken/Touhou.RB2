@@ -6,6 +6,7 @@ class BulletEmitter
         throw "BulletEmitter: sink must be an array" if not sink.is_a?(Array)
         throw "BulletEmitter: sink cannot be nil" if sink.nil?
         @_sink = sink
+        @is_enemy = true
     end
 
     def emit(data = {})
@@ -14,6 +15,11 @@ class BulletEmitter
 
     def update()
         @tick += 1
+    end
+
+    def set_side(enemy = true)
+        @is_enemy = enemy
+        return self
     end
 
     def is_emitting?()

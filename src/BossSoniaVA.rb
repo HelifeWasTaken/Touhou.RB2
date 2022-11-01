@@ -37,7 +37,7 @@ class BossSoniaVA < Omega::SpriteSheet
                                           Omega::Vector2.new(-100, 0),]
         }
 
-        @bullets = []
+        # @bullets = []
         @frame_timer = 0
         @frames_counter = 0
         @current_pattern_pos = 0
@@ -45,14 +45,22 @@ class BossSoniaVA < Omega::SpriteSheet
         @freeze_list = []
         @can_move = true
 
+        @hitbox = BossCollider.new(self, 0, 0, 48, 48)
+
         @shot_sound = Gosu::Sample.new("assets/sounds/shot.wav")
         @knife_sound = Gosu::Sample.new("assets/sounds/knife.wav")
+
+        set_origin(0.5)
     end
 
     def update
+        $tree.insert(@hitbox.collision)
+        # return
         @center ||= Omega::Vector3.new((Omega.width - width_scaled) / 2, 150, 0)
         @launched ||= false
         @position.update_easing()
+        
+        @hitbox.update_collider_position(@position.x - @hitbox.collision.w / 2.0, @position.y - @hitbox.collision.h / 2.0)
 
         case @current_pattern
         when BASIC_SHOTS
@@ -89,21 +97,21 @@ class BossSoniaVA < Omega::SpriteSheet
                 Bullet.new("assets/textures/bullet/red_warp.png")
                             .set_speed(5) # Speed de la bullet
                             .set_angle(shoot_angle) # l'angle en grade
-                            .set_sink(@bullets) # obligatoire sinon ça va crash
+                            .set_sink($bullet_sink) # obligatoire sinon ça va crash
                             .set_position(@position.clone + Omega::Vector2.new(width_scaled / 2, height_scaled / 2).to_vector3) # kek
                             .spawn() # le push sur la liste
 
                 Bullet.new("assets/textures/bullet/red_warp.png")
                             .set_speed(5) # Speed de la bullet
                             .set_angle(shoot_angle - 40) # l'angle en grade
-                            .set_sink(@bullets) # obligatoire sinon ça va crash
+                            .set_sink($bullet_sink) # obligatoire sinon ça va crash
                             .set_position(@position.clone + Omega::Vector2.new(width_scaled / 2, height_scaled / 2).to_vector3) # kek
                             .spawn() # le push sur la liste
 
                 Bullet.new("assets/textures/bullet/red_warp.png")
                             .set_speed(5) # Speed de la bullet
                             .set_angle(shoot_angle + 40) # l'angle en grade
-                            .set_sink(@bullets) # obligatoire sinon ça va crash
+                            .set_sink($bullet_sink) # obligatoire sinon ça va crash
                             .set_position(@position.clone + Omega::Vector2.new(width_scaled / 2, height_scaled / 2).to_vector3) # kek
                             .spawn() # le push sur la liste
 
@@ -135,7 +143,7 @@ class BossSoniaVA < Omega::SpriteSheet
                     bullet = Bullet.new("assets/textures/bullet/red_blade.png")
                                                 .set_speed(8) # Speed de la bullet
                                                 .set_angle(shoot_angle) # l'angle en grade
-                                                .set_sink(@bullets) # obligatoire sinon ça va crash
+                                                .set_sink($bullet_sink) # obligatoire sinon ça va crash
                                                 .set_position(knife_position) # kek
                                                 .spawn() # le push sur la liste
                     bullet.set_trail(true, 10, 2)
@@ -172,56 +180,56 @@ class BossSoniaVA < Omega::SpriteSheet
                 Bullet.new("assets/textures/bullet/blue_warp.png")
                             .set_speed(speed) # Speed de la bullet
                             .set_angle(@circular_angle) # l'angle en grade
-                            .set_sink(@bullets) # obligatoire sinon ça va crash
+                            .set_sink($bullet_sink) # obligatoire sinon ça va crash
                             .set_position(@position.clone + Omega::Vector2.new(width_scaled / 2, height_scaled / 2).to_vector3) # kek
                             .spawn() # le push sur la liste
 
                 Bullet.new("assets/textures/bullet/blue_warp.png")
                             .set_speed(speed) # Speed de la bullet
                             .set_angle(@circular_angle + 45) # l'angle en grade
-                            .set_sink(@bullets) # obligatoire sinon ça va crash
+                            .set_sink($bullet_sink) # obligatoire sinon ça va crash
                             .set_position(@position.clone + Omega::Vector2.new(width_scaled / 2, height_scaled / 2).to_vector3) # kek
                             .spawn() # le push sur la liste
 
                 Bullet.new("assets/textures/bullet/blue_warp.png")
                             .set_speed(speed) # Speed de la bullet
                             .set_angle(@circular_angle + 90) # l'angle en grade
-                            .set_sink(@bullets) # obligatoire sinon ça va crash
+                            .set_sink($bullet_sink) # obligatoire sinon ça va crash
                             .set_position(@position.clone + Omega::Vector2.new(width_scaled / 2, height_scaled / 2).to_vector3) # kek
                             .spawn() # le push sur la liste
 
                 Bullet.new("assets/textures/bullet/blue_warp.png")
                             .set_speed(speed) # Speed de la bullet
                             .set_angle(@circular_angle + 135) # l'angle en grade
-                            .set_sink(@bullets) # obligatoire sinon ça va crash
+                            .set_sink($bullet_sink) # obligatoire sinon ça va crash
                             .set_position(@position.clone + Omega::Vector2.new(width_scaled / 2, height_scaled / 2).to_vector3) # kek
                             .spawn() # le push sur la liste
 
                 Bullet.new("assets/textures/bullet/blue_warp.png")
                             .set_speed(speed) # Speed de la bullet
                             .set_angle(@circular_angle + 180) # l'angle en grade
-                            .set_sink(@bullets) # obligatoire sinon ça va crash
+                            .set_sink($bullet_sink) # obligatoire sinon ça va crash
                             .set_position(@position.clone + Omega::Vector2.new(width_scaled / 2, height_scaled / 2).to_vector3) # kek
                             .spawn() # le push sur la liste
 
                 Bullet.new("assets/textures/bullet/blue_warp.png")
                             .set_speed(speed) # Speed de la bullet
                             .set_angle(@circular_angle + 225) # l'angle en grade
-                            .set_sink(@bullets) # obligatoire sinon ça va crash
+                            .set_sink($bullet_sink) # obligatoire sinon ça va crash
                             .set_position(@position.clone + Omega::Vector2.new(width_scaled / 2, height_scaled / 2).to_vector3) # kek
                             .spawn() # le push sur la liste
 
                 Bullet.new("assets/textures/bullet/blue_warp.png")
                             .set_speed(speed) # Speed de la bullet
                             .set_angle(@circular_angle + 270) # l'angle en grade
-                            .set_sink(@bullets) # obligatoire sinon ça va crash
+                            .set_sink($bullet_sink) # obligatoire sinon ça va crash
                             .set_position(@position.clone + Omega::Vector2.new(width_scaled / 2, height_scaled / 2).to_vector3) # kek
                             .spawn() # le push sur la liste
 
                 Bullet.new("assets/textures/bullet/blue_warp.png")
                             .set_speed(speed) # Speed de la bullet
                             .set_angle(@circular_angle + 315) # l'angle en grade
-                            .set_sink(@bullets) # obligatoire sinon ça va crash
+                            .set_sink($bullet_sink) # obligatoire sinon ça va crash
                             .set_position(@position.clone + Omega::Vector2.new(width_scaled / 2, height_scaled / 2).to_vector3) # kek
                             .spawn() # le push sur la liste
 
@@ -245,10 +253,11 @@ class BossSoniaVA < Omega::SpriteSheet
 
     def draw
         super()
-        @bullets.each do |bullet|
-            bullet.update() if not @stop_update and not @freeze_list.include?(bullet.get_id)
-            bullet.draw()
-        end
+        # @bullets.each do |bullet|
+        #     bullet.update() if not @stop_update and not @freeze_list.include?(bullet.get_id)
+        #     bullet.draw()
+        # end
+        @hitbox.draw if $debug_flags[:hitboxes]
     end
 
 end

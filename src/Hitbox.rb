@@ -2,21 +2,21 @@ module HitboxType
     HITBOX_NO_TYPE = -1
     #---
     BULLET = 1
-    PLAYER_BULLET = BULLET & 256
-    ENEMY_BULLET = BULLET & 512
+    PLAYER_BULLET = HitboxType::BULLET | 256
+    ENEMY_BULLET = HitboxType::BULLET | 512
     #---
     PLAYER = 2
     ENEMY = 4
     #---
 
-    def isBullet(type)
+    def HitboxType.isBullet(type)
         return type & BULLET != 0
     end
 end
 
 class Hitbox
 
-  attr :x, :y, :w, :h, :type
+  attr_accessor :x, :y, :w, :h, :type
 
   def initialize(x, y, w, h, type = HitboxType::HITBOX_NO_TYPE, owner = nil)
     @x = x
@@ -27,15 +27,18 @@ class Hitbox
     @owner = owner
   end
 
-  def collides(other)
-    @x > other.x + other.w or
-    @x + @w < other.x or
-    @y > other.y + other.h or
-    @y + @h < other.y
-  end
+  def collides?(other)
+    if @x > other.x + other.w or
+        @x + @w < other.x or
+        @y > other.y + other.h or
+        @y + @h < other.y
+        return false
+    end
+    return true
+end
 
   def draw
-    Gosu.draw_rect(@x, @y, @w, @h, Gosu::Color::RED)
+    Gosu.draw_rect(@x, @y, @w, @h, Gosu::Color.new(0x80_ff0000), 25000)
   end
 
   def move(x, y)
@@ -81,6 +84,12 @@ class QuadTree
       raise "QuadTree depth must be greater than " + QUADTREE_MIN_DEPTH.to_s
     end
 
+    # Kek
+    @x = x
+    @y = y
+    @w = w
+    @h = h
+
     @hitbox = Hitbox.new(x, y, w, h, -1)
     @depth = depth
     @children = []
@@ -88,6 +97,7 @@ class QuadTree
   end
 
   def insert(hitbox)
+    # print "Inserting #{hitbox} type: #{hitbox.type}\n"
     if @children.empty?
       @hitboxes << hitbox
       if @hitboxes.length > QUADTREE_CAPACITY && @depth > QUADTREE_MIN_DEPTH
@@ -104,6 +114,7 @@ class QuadTree
   end
 
   def subdivide
+    # print "Subdividing\n"
     @children << QuadTree.new(@hitbox.x, @hitbox.y, @hitbox.w / 2, @hitbox.h / 2, @depth - 1)
     @children << QuadTree.new(@hitbox.x + @hitbox.w / 2, @hitbox.y, @hitbox.w / 2, @hitbox.h / 2, @depth - 1)
     @children << QuadTree.new(@hitbox.x, @hitbox.y + @hitbox.h / 2, @hitbox.w / 2, @hitbox.h / 2, @depth - 1)
@@ -121,11 +132,11 @@ class QuadTree
   end
 
   def contains(hitbox)
-    @hitbox.collides(hitbox)
+    @hitbox.collides?(hitbox)
   end
 
   def draw
-    Gosu.draw_rect(@x, @y, @w, @h, Gosu::Color::BLACK)
+    Gosu.draw_rect(@x + 2, @y + 2, @w - 2, @h - 2, Gosu::Color.new(0x8000FF00)) if @children.empty?# Setting an offset to clearly see the quadtree
     @children.each do |child|
       child.draw
     end
@@ -135,7 +146,7 @@ class QuadTree
     results = []
     if @children.empty?
       @hitboxes.each do |hitbox|
-        if range.collides(hitbox)
+        if range.collides?(hitbox)
           results << hitbox
         end
       end
@@ -192,7 +203,7 @@ end
 
 class CollidableEntity
 
-  attr :collision
+  attr_accessor :collision
 
   def initialize(child, x, y, w, h, type)
       # ...
@@ -236,15 +247,18 @@ end
 
 class BulletCollider < CollidableEntity
 
-    def initialize(child, x, y, w, h)
-        super(child, x, y, w, h, HitboxType::BULLET)
+    def initialize(bullet, x, y, w, h)
+        @_bullet = bullet 
+        super(self, x, y, w, h, HitboxType::BULLET)
     end
 
     def on_collision(other)
         return if (HitboxType::isBullet(other.type))
+        @_bullet.kill if not is_enemy? and other.type != HitboxType::PLAYER
+        @_bullet.kill if is_enemy? and other.type == HitboxType::PLAYER
     end
 
-    def set_side(enemy = false)
+    def set_side(enemy = true)
         if enemy
             self.collision.type = HitboxType::ENEMY_BULLET
         else
@@ -254,6 +268,36 @@ class BulletCollider < CollidableEntity
 
     def is_enemy?
         return self.collision.type == HitboxType::ENEMY_BULLET
+    end
+end
+
+class PlayerCollider < CollidableEntity
+
+    def initialize(child, x, y, w, h)
+        @_player = child
+        super(self, x, y, w, h, HitboxType::PLAYER)
+    end
+
+    def on_collision(other)
+        return if not (HitboxType::isBullet(other.type))
+        return if other.type == HitboxType::PLAYER_BULLET
+        # @_parent.die
+        throw "PLAYER HAS BEEN HIT"
+    end
+end
+
+class BossCollider < CollidableEntity
+
+    def initialize(child, x, y, w, h)
+        @_boss = child
+        super(self, x, y, w, h, HitboxType::ENEMY)
+    end
+
+    def on_collision(other)
+        return if not (HitboxType::isBullet(other.type))
+        return if other.type == HitboxType::ENEMY_BULLET
+        #@_boss.hurt
+        throw "BOSS HAS BEEN HIT"
     end
 end
 

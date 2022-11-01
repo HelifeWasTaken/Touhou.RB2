@@ -156,15 +156,16 @@ class Bullet < Omega::Sprite
         if (width != nil)
             if (height != nil)
                 @size = Omega::Vector2.new(width, height)
-                @hitbox = BulletCollider.new(self, 0, 0, width, height)
+                @hitbox = BulletCollider.new(self, 0, 0, width / 2.0, height / 2.0)
             else
                 @size = Omega::Vector2.new(width, width)
-                @hitbox = BulletCollider.new(self, 0, 0, width, width)
+                @hitbox = BulletCollider.new(self, 0, 0, width / 2.0, width / 2.0)
             end
         else
             @size = Omega::Vector2.new(@image.width, @image.height)
-            @hitbox = BulletCollider.new(self, 0, 0, @image.width, @image.height)
+            @hitbox = BulletCollider.new(self, 0, 0, @image.width / 2.0, @image.height / 2.0)
         end
+        @hitbox.set_side()
         @rotation = 0
         @speed = 1
         @_behavior = [
@@ -196,6 +197,7 @@ class Bullet < Omega::Sprite
             @_sink.delete(self) if (not @_sink.nil? and (data[:post_mortal].nil? or not data[:post_mortal]))
             return
         end
+        $tree.insert(@hitbox.collision)
         if (@_behavior != nil)
             if @_behavior.size == 0
                 @_behavior << {
@@ -212,7 +214,13 @@ class Bullet < Omega::Sprite
     end
 
     def draw()
-        # @hitbox.draw()
+        if $debug_flags[:hitboxes]
+            @hitbox.draw()
+            vec = Omega::Vector2.new(Math::cos(Omega::to_rad(@rotation)), Math::sin(Omega::to_rad(@rotation)))
+            start_p = self.position
+            end_p = start_p + (vec * 50).to_vector3
+            Gosu::draw_line(start_p.x, start_p.y, Omega::Color.new(0xff0000ff), end_p.x, end_p.y, Omega::Color.new(0xff0000ff), 250000)
+        end
         @position.z = 10_000
         super()
     end
@@ -253,7 +261,7 @@ class Bullet < Omega::Sprite
         return set_position(position + vec.to_vector3)
     end
 
-    def set_bullet_side(enemy = false)
+    def set_bullet_side(enemy = true)
         @hitbox.set_side(enemy)
         return self
     end
@@ -356,7 +364,6 @@ class SplitBullet < Bullet
         throw "SplitBullet: self is not in the sink" if not @_sink.include?(self)
         if (@_depth > 0)
             offset = ((@_max_angle - @_min_angle) / 2.0) - ((@_max_angle - @_min_angle) / (@_split_number - 1) / 2.0)
-            puts offset
             for i in 0...@_split_number
                 bullet = self.clone()
                 bullet.set_speed(@speed.to_f * @_split_factor)

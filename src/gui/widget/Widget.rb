@@ -40,15 +40,12 @@ module GUI
         end
 
         def initialize_copy(other)
-            puts "WIDGET COPY"
             self.position = other.position.clone
             self.size = other.size.clone
             self.tile_size = other.tile_size.clone
             self.scale = other.scale.clone
             self._tiles = other._tiles.clone
             self._rect = other._rect.clone
-            print "SELF: ", self, " ", self._rect, "\n"
-            print "Original: ", other, " ", other._rect, "\n"
             self._idle = other._idle.clone
             self._hover = other._hover.clone
             self._pressed = other._pressed.clone

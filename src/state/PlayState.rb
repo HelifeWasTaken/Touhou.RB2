@@ -27,26 +27,47 @@ class PlayState < Omega::State
 
         @tick = 0
 
+        @boss = BossSoniaVA.new(@player)
+
+        a = Hitbox.new(0, 0, 48, 48, HitboxType::ENEMY)
+        b = Hitbox.new(594, 858, 12, 12, HitboxType::PLAYER)
+
+        puts a.collides?(b)
+
     end
 
     def update
-        $score += 10 if @tick % 60 == 0 and @tick != 0
+        Game.debug
+        # $score += 10 if @tick % 60 == 0 and @tick != 0
         @n.set_text("#{$score}")
         @gui.update
         @parallax.position.y += 1
         @player.update
+        @boss.update
         for bullet in $bullet_sink
             bullet.update()
+            # if @player.hitbox.collides(bullet.hitbox) and bullet.hitbox.type == HitboxType::ENEMY_BULLET
+            #     bullet.kill
+            #     puts "PLAYER HIT"
+            # end
+            # if @boss.hitbox.collides(bullet.hitbox) and bullet.hitbox.type == HitboxType::PLAYER_BULLET
+            #     bullet.kill
+            #     puts "BOSS HIT"
+            # end
         end
         @tick += 1
+        $tree.update
     end
 
     def draw
         @parallax.draw
+        # $tree.draw
         @player.draw
+        @boss.draw
         for bullet in $bullet_sink
             bullet.draw()
         end
+        $tree.clear
         @gui.draw
     end
 end

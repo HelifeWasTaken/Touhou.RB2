@@ -17,10 +17,8 @@ module GUI
             for w in widget
                 w.set_position(Omega::Vector2.new(@position.x, y))
                 y += w.get_size.y + @_spacing
-                puts "\tADDING: #{w}"
                 @widgets << w
             end
-            @widgets.each { |w| print w, " ", w._rect, " ", w._rect.s , "\n" }
             return self
         end
 
@@ -40,7 +38,6 @@ module GUI
             for w in @widgets
                 w.set_position(Omega::Vector2.new(@position.x, y))
                 y += w.get_size.y + @_spacing
-                print w, " ", w._rect, "\n"
             end
             __reload
             return self

@@ -35,7 +35,6 @@ class TestState < Omega::State
         @text = GUI::Text.new().set_text("Hello").set_size(Omega::Vector2.new(256, 20)).set_position(Omega::Vector2.new(0, 10)).set_font($font).set_alignment(GUI::Text::Alignment::CENTER)
 
         @button.on_click do |button|
-            puts button
             button.disable
         end
 
@@ -47,15 +46,9 @@ class TestState < Omega::State
 
         @button.add(@text)
 
-        print "THE ORIGIN: ", @button, " ", @button._rect, " ", @button._rect.s, "\n"
-
         group = GUI::Group.new().set_position(Omega::Vector2.new(500, 100)).add(@button.clone())
 
-        print "THE ORIGIN: ", @button, " ", @button._rect, " ", @button._rect.s, "\n"
-
         @gui = Gui.new().set_position(Omega::Vector2.new(0, 0)).add(@button, a, group)
-
-        print "THE ORIGIN: ", @button, " ", @button._rect, " ", @button._rect.s, "\n"
 
         # text = GUI::Text.new().set_text("Hello").set_font($font).set_size(Omega::Vector2.new(500, 10)).set_alignment(GUI::Text::Alignment::RIGHT)
         # @gui.add(text)
@@ -179,11 +172,20 @@ class Game < Omega::RenderWindow
     $camera = Omega::Camera.new()
     $camera.scale = Omega::Vector2.new($scale, $scale)
 
-    $tree = nil
+    $tree = QuadTree.new(-250, -250, 1700, 1580)
 
     $bullet_sink = []
 
     $score = 0
+
+    # Debug variables
+    $debug = false
+    $debug_flags = {
+        :hitboxes => false,
+        :gui => false
+    }
+    $combination = false
+    $debug_pressed = false
 
     def load
         $game = self
@@ -200,6 +202,40 @@ class Game < Omega::RenderWindow
         return (Omega::just_pressed(Gosu::KB_X) or Omega::just_pressed(Gosu::KB_RETURN) or Omega::just_pressed(Gosu::GP_0_BUTTON_0))
     end
 
+    def Game.debug
+        if Omega::pressed(Gosu::KB_F3)
+            if not $debug
+                if Omega::just_pressed(Gosu::KB_B)
+                    $debug = true
+                    $combination = true
+                    $debug_flags[:hitboxes] = true
+                # elsif Omega::just_pressed(Gosu::KB_C)
+                #     $debug = true
+                #     $combination = true
+                #     $debug_flags[:collisions] = true
+                # elsif Omega::just_pressed(Gosu::KB_E)
+                #     $debug = true
+                #     $combination = true
+                #     $debug_flags[:emitters] = true
+                elsif Omega::just_pressed(Gosu::KB_H)
+                    $debug = true
+                    $combination = true
+                    $debug_flags[:gui] = true
+                end
+            end
+            $debug_pressed = true
+        end
+        if not Omega::pressed(Gosu::KB_F3) and $debug_pressed
+            $debug_pressed = false
+            if not $combination
+                $debug = !$debug
+                $debug_flags.each do |key, value|
+                    $debug_flags[key] = false
+                end
+            end
+            $combination = false
+        end
+    end
 end
 
 Omega.run(Game, "config.json")

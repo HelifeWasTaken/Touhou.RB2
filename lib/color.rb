@@ -3,16 +3,16 @@ module Omega
     class Color < Gosu::Color
 
         # Original Gosu colors (note : CYAN == AQUA)
-        NONE = Omega::Color.new(0x00_000000)
+        NONE = Omega::Color.new(0x00_000000) # -____-
         BLACK = Omega::Color.new(0xff_000000)
         GRAY = Omega::Color.new(0xff_808080)
         WHITE = Omega::Color.new(0xff_ffffff)
-        AQUA = Omega::Color.new(0xff_00ffff)
+        AQUA = Omega::Color.new(0xff_00ffff) # WHYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYY
         RED = Omega::Color.new(0xff_ff0000)
         GREEN = Omega::Color.new(0xff_00ff00)
         BLUE = Omega::Color.new(0xff_0000ff)
         YELLOW = Omega::Color.new(0xff_ffff00)
-        FUCHSIA = Omega::Color.new(0xff_ff00ff)
+        FUCHSIA = Omega::Color.new(0xff_ff00ff) # Wtf is this ?
         CYAN = Omega::Color.new(0xff_00ffff)
 
         # New colors

@@ -28,7 +28,6 @@ module GUI
         end
 
         def initialize_copy(other)
-            puts "BUTTON COPY"
             self.widgets = other.widgets.map { |widget| widget.clone() }
             super(other)
         end
@@ -41,9 +40,7 @@ module GUI
         def set_position(position_)
             super(position_)
             self.widgets.each { |widget| widget.set_position(widget.get_position + self.position) }
-            print "Set Position: ", self, " ", self.position, " ", position_.s, "\n"
             __reload
-            print "AFTER: ", self, " ", self._rect, " ", self._rect.s, "\n"
             return self
         end
 

@@ -46,10 +46,11 @@ class MenuState < Omega::State
       @text.speed = 5
       @text_game_mode = BlinkingText.new("Press R_SHIFT to modify player mode\n                  1 player mode")
 
-      @pres = Omega::Text.new("Mattis, Raphaël and Denis present to you", $font)
+      @pres = Omega::Text.new("Mattis, Raphaël, Denis and Tessy (art)\n" +
+                              "                 present to you", $font)
       @pres.color = Omega::Color::WHITE
       @pres.alpha = 0
-      @pres2 = Omega::Text.new("in occasion of the Devtober Jam", $font)
+      @pres2 = Omega::Text.new("\nin occasion of the Devtober Jam", $font)
       @pres2.color = Omega::Color::WHITE
       @pres2.alpha = 0
 

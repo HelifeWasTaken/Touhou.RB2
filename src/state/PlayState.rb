@@ -25,6 +25,12 @@ class PlayState < Omega::State
             panel
         )
 
+        # Some "Mode 7" clouds
+        @ptex = PerspectiveTexture.new("assets/night_sky_filter_forge.png", Omega.width, Omega.height)
+        @ptex.perspective_modifier = 50
+        @ptex.base_perspective = 1.45
+        @ptex.y = Omega.height - 500
+
         @tick = 0
 
         @boss = BossSoniaVA.new(@player)
@@ -44,6 +50,7 @@ class PlayState < Omega::State
         @parallax.position.y += 1
         @player.update
         @boss.update
+        @ptex.pz -= 1
         for bullet in $bullet_sink
             bullet.update()
             # if @player.hitbox.collides(bullet.hitbox) and bullet.hitbox.type == HitboxType::ENEMY_BULLET
@@ -62,6 +69,7 @@ class PlayState < Omega::State
     def draw
         @parallax.draw
         # $tree.draw
+        @ptex.draw
         @player.draw
         @boss.draw
         for bullet in $bullet_sink

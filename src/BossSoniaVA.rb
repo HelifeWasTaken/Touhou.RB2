@@ -10,6 +10,8 @@ class BossSoniaVA < Omega::SpriteSheet
 
     PATTERNS_DURATION = 20
 
+    attr_reader :health
+
     def initialize(player)
         super("assets/textures/character/whiterock.png", 48, 48)
 
@@ -45,12 +47,26 @@ class BossSoniaVA < Omega::SpriteSheet
         @freeze_list = []
         @can_move = true
 
+        @health = 500
+
         @hitbox = BossCollider.new(self, 0, 0, 48, 48)
 
         @shot_sound = Gosu::Sample.new("assets/sounds/shot.wav")
         @knife_sound = Gosu::Sample.new("assets/sounds/knife.wav")
 
         set_origin(0.5)
+    end
+
+    def hurt()
+        @health -= 1
+        # if @health <= 0
+        #     @stop_update = true
+        #     @position.move_to(@center + Omega::Vector2.new(0, 1000).to_vector3())
+        #     @can_move = false
+        #     Omega::Timer.new(2) do
+        #         Omega::Game::set_scene(GameOver.new())
+        #     end
+        # end
     end
 
     def update

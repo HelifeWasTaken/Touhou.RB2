@@ -46,9 +46,11 @@ class TestState < Omega::State
 
         @button.add(@text)
 
+        bar = GUI::ProgressBar.new().set_size(Omega::Vector2.new(256, 16)).set_color(Omega::Color::CYAN).set_scale(Omega::Vector2.new(2, 2)).set_position(Omega::Vector2.new(100, 200)).set_texture("assets/textures/gui/progress_bar.png").set_value(50)
+
         group = GUI::Group.new().set_position(Omega::Vector2.new(500, 100)).add(@button.clone())
 
-        @gui = Gui.new().set_position(Omega::Vector2.new(0, 0)).add(@button, a, group)
+        @gui = Gui.new().set_position(Omega::Vector2.new(0, 0)).add(@button, a, group, bar)
 
         # text = GUI::Text.new().set_text("Hello").set_font($font).set_size(Omega::Vector2.new(500, 10)).set_alignment(GUI::Text::Alignment::RIGHT)
         # @gui.add(text)
@@ -214,6 +216,8 @@ class Game < Omega::RenderWindow
     }
     $combination = false
     $debug_pressed = false
+
+    $bullet_zone = Omega::Rectangle.new(-100, -100, 980, 1260)
 
     def load
         $game = self

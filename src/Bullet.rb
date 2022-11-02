@@ -17,7 +17,7 @@ class BulletBehavior
 
     def update()
         # puts "Killing bullet at #{@owner.position.to_s}" if not Omega.position_in_window?(@owner.position, Omega::Vector2.new(250, 250))
-        @owner.kill if not Omega.position_in_window?(@owner.position, Omega::Vector2.new(250, 250))
+        @owner.kill if not $bullet_zone.point_collides?(@owner.position)
         @tick += 1;
     end
 

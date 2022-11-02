@@ -2,7 +2,7 @@ module GUI
     
     class Widget
 
-        # protected
+        protected
             
         attr_accessor :position, :size, :tile_size, :scale, :_texture, :_tiles, :_rect, :_idle, :_hover, :_pressed, :_click, :_input, :_active, :_enabled, :_parent, :_was_pressed
 

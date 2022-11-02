@@ -254,6 +254,7 @@ class BulletCollider < CollidableEntity
 
     def on_collision(other)
         return if (HitboxType::isBullet(other.type))
+        $score += 100 if not is_enemy? and other.type != HitboxType::PLAYER
         @_bullet.kill if not is_enemy? and other.type != HitboxType::PLAYER
         @_bullet.kill if is_enemy? and other.type == HitboxType::PLAYER
     end
@@ -282,7 +283,7 @@ class PlayerCollider < CollidableEntity
         return if not (HitboxType::isBullet(other.type))
         return if other.type == HitboxType::PLAYER_BULLET
         # @_parent.die
-        throw "PLAYER HAS BEEN HIT"
+        # throw "PLAYER HAS BEEN HIT"
     end
 end
 
@@ -296,8 +297,8 @@ class BossCollider < CollidableEntity
     def on_collision(other)
         return if not (HitboxType::isBullet(other.type))
         return if other.type == HitboxType::ENEMY_BULLET
-        #@_boss.hurt
-        throw "BOSS HAS BEEN HIT"
+        @_boss.hurt
+        # throw "BOSS HAS BEEN HIT"
     end
 end
 

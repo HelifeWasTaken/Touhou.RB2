@@ -115,17 +115,17 @@ class Player
 
         move((axis * 5).to_vector3)
 
-        if (@sprite.position.x < 0)
-            @sprite.position.x = 0
+        if (@sprite.position.x < 10)
+            @sprite.position.x = 10
         end
-        if (@sprite.position.x > 800)
-            @sprite.position.x = 800
+        if (@sprite.position.x > 780)
+            @sprite.position.x = 780
         end
-        if (@sprite.position.y < 0)
-            @sprite.position.y = 0
+        if (@sprite.position.y < 10)
+            @sprite.position.y = 10
         end
-        if (@sprite.position.y > 1080)
-            @sprite.position.y = 1080
+        if (@sprite.position.y > 1060)
+            @sprite.position.y = 1060
         end
 
         @_emitter.emit if Omega.pressed(Gosu::KB_SPACE) and not @_emitter.nil? and not @_emitter.is_emitting?
@@ -170,6 +170,8 @@ class PlayerEmitter < BulletEmitter
         
         @tick = 0
         Bullet.new("assets/textures/bullet/kek_bullet.png").set_bullet_side(false).set_sink($bullet_sink).set_speed(25).set_angle(-90).set_position(@pos - Omega::Vector2.new(0, 6)).spawn()
+        Bullet.new("assets/textures/bullet/kek_bullet.png").set_bullet_side(false).set_sink($bullet_sink).set_speed(25).set_angle(-91).set_position(@pos - Omega::Vector2.new(8, 4)).spawn()
+        Bullet.new("assets/textures/bullet/kek_bullet.png").set_bullet_side(false).set_sink($bullet_sink).set_speed(25).set_angle(-89).set_position(@pos - Omega::Vector2.new(-8, 4)).spawn()
     end
 
     def update()

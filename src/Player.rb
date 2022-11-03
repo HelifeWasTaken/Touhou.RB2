@@ -154,6 +154,12 @@ class Player
             Gosu::draw_line(start_p.x, start_p.y, Omega::Color.new(0xff0000ff), end_p.x, end_p.y, Omega::Color.new(0xff0000ff), 250000)
         end
     end
+
+    # Dummy method, only for test purposes
+    def is_alive?
+        return false if Omega::pressed(Gosu::KB_F1)
+        return true
+    end
 end
 
 class PlayerEmitter < BulletEmitter

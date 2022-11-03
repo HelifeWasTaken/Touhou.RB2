@@ -223,11 +223,12 @@ class Game < Omega::RenderWindow
         $game = self
 
         $camera = Omega::Camera.new($scale)
-        transition = Omega::FadeTransition.new(5, Omega::Color::copy(Omega::Color::BLACK)) { Omega.set_state(PlayState.new) }
-        #transition = Omega::FadeTransition.new(5, Omega::Color::copy(Omega::Color::BLACK)) { Omega.set_state(PlayState.new) }
-        transition.alpha = 255
+        # transition = Omega::FadeTransition.new(5, Omega::Color::copy(Omega::Color::BLACK)) { Omega.set_state(PlayState.new) }
+        # transition.alpha = 255
 
-        Omega.launch_transition(transition)
+        # Omega.launch_transition(transition)
+
+        Omega.set_state(GameOverState.new)
     end
 
     def Game.is_just_pressed_ok

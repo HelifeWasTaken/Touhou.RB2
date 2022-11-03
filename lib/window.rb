@@ -258,4 +258,8 @@ module Omega
         zone = Rectangle.new(-offset.x, -offset.y, Omega.width + offset.x * 2, Omega.height + offset.y * 2)
         return zone.contains?(vector)
     end
+
+    def Omega.close
+        @@window.close
+    end
 end

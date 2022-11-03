@@ -3,7 +3,7 @@ class TextBox
   def initialize(text, on_left)
 
     @box = Omega::Sprite.new("./assets/images/dialog_box.png")
-    @box.z = 10000001
+    @box.z = 100000001
     @box.set_scale(3.5, 2.25)
     @box.x = Omega.width / 2 - (320 * 3.5) / 2
     @box.y = Omega.height - @box.height * 2.5
@@ -52,7 +52,7 @@ class TextBox
 
   def draw
     @box.draw()
-    $font.draw_text(@current_buffer, @BUFFER_STARTX, @BUFFER_STARTY, 10000001, 0.6, 0.6, Gosu::Color.new(@box.alpha, 255, 255, 255))
+    $font.draw_text(@current_buffer, @BUFFER_STARTX, @BUFFER_STARTY, 100000002, 0.6, 0.6, Gosu::Color.new(@box.alpha, 255, 255, 255))
   end
 
   def clear_current_buffer
@@ -104,6 +104,7 @@ class TextBoxHandler
     @left_character.flip.x = flip
     @left_character.y = Omega.height / 2 - @left_character.height / 2 - 60
     @left_character.x = -@left_character.width
+    @left_character.z = 100000000
     self
   end
 
@@ -112,6 +113,7 @@ class TextBoxHandler
     @right_character.flip.x = flip
     @right_character.y = Omega.height / 2 - @right_character.height / 2 - 60
     @right_character.x = Omega.width
+    @right_character.z = 100000000
     self
   end
 

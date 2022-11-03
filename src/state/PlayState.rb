@@ -17,6 +17,9 @@ class PlayState < Omega::State
         @debug_text = Omega::Text.new("DEBUG MODE", $font)
         @debug_text.position.z = 100000000000
 
+        @intro = text_introduction()
+        @intro.start()
+
         @placeholders = [
             Omega::Rectangle.new(0, 0, 10, 1080),
             Omega::Rectangle.new(790, 0, 410, 1080),
@@ -62,7 +65,7 @@ class PlayState < Omega::State
 
         # MusiK
         @music = Gosu::Song.new("assets/musics/flandres_theme.ogg")
-        @music.play(true)
+        
         @volume ||= 0
     end
 
@@ -101,6 +104,10 @@ class PlayState < Omega::State
             end
         end
 
+        @intro.update()
+        return if not @intro.finished
+        @music.play(true)
+
         @music.volume = @volume # because the FRICKING VOLUME ATTRIBUTE IS WRITE ONLY GRAAAH
         
         return if update_substate()
@@ -133,6 +140,7 @@ class PlayState < Omega::State
     end
 
     def draw
+        @intro.draw()
         @parallax.draw
         # $tree.draw
         @ptex.draw

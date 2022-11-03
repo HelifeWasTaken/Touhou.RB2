@@ -187,7 +187,12 @@ class Game < Omega::RenderWindow
     $tree = QuadTree.new(-250, -250, 1700, 1580)
 
     $sounds = {
-      "talk" => Gosu::Sample.new("assets/musics/talk.wav")
+      "talk" => Gosu::Sample.new("assets/musics/talk.wav"),
+      "accept" => Gosu::Sample.new("assets/sounds/accept.wav"),
+      "click" => Gosu::Sample.new("assets/sounds/click.wav"),
+      "swoosh" => Gosu::Sample.new("assets/sounds/swoosh.wav"),
+      "swoosh_1" => Gosu::Sample.new("assets/sounds/swoosh_1.wav"),
+      "swoosh_2" => Gosu::Sample.new("assets/sounds/swoosh_2.wav"),
     }
 
     $musics = {

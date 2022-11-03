@@ -32,6 +32,10 @@ class GameOverState < Omega::State
         @gameover_text_offset = 0
         @choices = ["Try again", "Quit"]
         @choice_index = 0
+        @channel = nil
+
+        # Swoosh!
+        $sounds["swoosh"].play()
     end
 
     def update_spell_logo
@@ -49,15 +53,22 @@ class GameOverState < Omega::State
     def update
         case @phase
         when 0
-            @phase = 1 if Omega::just_pressed(Gosu::KB_RETURN) if @gameover_text_offset >= @gameover_text.height
+            if Omega::just_pressed(Gosu::KB_RETURN) and @gameover_text_offset >= @gameover_text.height
+                @phase = 1
+                $sounds["swoosh_1"].play()
+            end
         when 1
-            @global_scale -= (@global_scale - FINAL_GLOBAL_SCALE) * 0.15
+            @global_scale -= (@global_scale - FINAL_GLOBAL_SCALE) * 0.16
             if Omega::just_pressed(Gosu::KB_RETURN)
                 @phase = (@choice_index == 0) ? 2 : 3
+                @channel = $sounds["swoosh_2"].play()
+                $sounds["accept"].play()
             elsif Omega::just_pressed(Gosu::KB_W)
                 @choice_index = (@choice_index + 1) % @choices.size
+                $sounds["click"].play()
             elsif Omega::just_pressed(Gosu::KB_S)
                 @choice_index = (@choice_index - 1) % @choices.size
+                $sounds["click"].play()
             end
         when 2, 3
             @global_scale *= 1.03
@@ -65,7 +76,7 @@ class GameOverState < Omega::State
             @spell_logo.alpha = (@spell_logo.alpha - 10).clamp(0, 255)
             @color.alpha = (@color.alpha - 10).clamp(0, 255)
             if @phase == 3
-                if @quit_color.alpha == 255
+                if @quit_color.alpha == 255 and (not @channel or not @channel.playing?)
                     Omega.close
                 end
                 @quit_color.alpha = (@quit_color.alpha + 10).clamp(0, 255)

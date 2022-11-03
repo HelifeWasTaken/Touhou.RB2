@@ -95,6 +95,7 @@ class MenuState < Omega::State
         @text_game_mode.update
 
         if (Game.is_just_pressed_ok and not Omega.is_transition?)
+            $sounds["accept"].play
             transition = Omega::FadeTransition.new(10, Omega::Color::copy(Omega::Color::BLACK)) { Omega.set_state(PlayState.new) }
             Omega.launch_transition(transition)
             @text.speed *= 5

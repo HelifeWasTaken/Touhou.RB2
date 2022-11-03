@@ -187,7 +187,12 @@ class Game < Omega::RenderWindow
     $tree = QuadTree.new(-250, -250, 1700, 1580)
 
     $sounds = {
-      "talk" => Gosu::Sample.new("assets/musics/talk.wav")
+      "talk" => Gosu::Sample.new("assets/musics/talk.wav"),
+      "accept" => Gosu::Sample.new("assets/sounds/accept.wav"),
+      "click" => Gosu::Sample.new("assets/sounds/click.wav"),
+      "swoosh" => Gosu::Sample.new("assets/sounds/swoosh.wav"),
+      "swoosh_1" => Gosu::Sample.new("assets/sounds/swoosh_1.wav"),
+      "swoosh_2" => Gosu::Sample.new("assets/sounds/swoosh_2.wav"),
     }
 
     $musics = {
@@ -223,11 +228,12 @@ class Game < Omega::RenderWindow
         $game = self
 
         $camera = Omega::Camera.new($scale)
-        transition = Omega::FadeTransition.new(5, Omega::Color::copy(Omega::Color::BLACK)) { Omega.set_state(PlayState.new) }
-        #transition = Omega::FadeTransition.new(5, Omega::Color::copy(Omega::Color::BLACK)) { Omega.set_state(PlayState.new) }
-        transition.alpha = 255
+        # transition = Omega::FadeTransition.new(5, Omega::Color::copy(Omega::Color::BLACK)) { Omega.set_state(PlayState.new) }
+        # transition.alpha = 255
 
-        Omega.launch_transition(transition)
+        # Omega.launch_transition(transition)
+
+        Omega.set_state(GameOverState.new)
     end
 
     def Game.is_just_pressed_ok

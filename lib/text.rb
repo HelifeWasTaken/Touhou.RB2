@@ -26,7 +26,7 @@ module Omega
         end
 
         def draw
-            if (@active)
+            if @active
                 @font.draw_markup(@text,
                                  @position.x,
                                  @position.y,

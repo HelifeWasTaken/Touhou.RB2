@@ -2,6 +2,7 @@ class PlayState < Omega::State
 
     def load
         @player = Player.new(Joystick.new(0))
+        $player = @player
 
         @parallax = Omega::Parallax.new([Omega::Sprite.new("assets/nebula.png")])
         @parallax.scale = Omega::Vector2.new(4, 4)
@@ -11,7 +12,10 @@ class PlayState < Omega::State
         @gui = Gui.new()
 
         # @boss = BossSoniaVA.new(@player)
-        @boss = Cirno.new().set_position(Omega::Vector2.new(780 / 2, 1060 / 2))
+        @boss = Cirno.new().set_position(Omega::Vector2.new(780 / 2, 100))
+
+        @debug_text = Omega::Text.new("DEBUG MODE", $font)
+        @debug_text.position.z = 100000000000
 
         @placeholders = [
             Omega::Rectangle.new(0, 0, 10, 1080),
@@ -35,7 +39,7 @@ class PlayState < Omega::State
         placeholder = GUI::Section.new().set_size(Omega::Vector2.new(96, 96))
 
         boss_text = GUI::Text.new().set_text("Boss:").set_size(Omega::Vector2.new(96, 0)).set_font($font)
-        @boss_life = GUI::ProgressBar.new().set_tile_size(Omega::Vector2.new(48, 20)).set_size(Omega::Vector2.new(144, 16)).set_scale(Omega::Vector2.new(2, 2)).set_position(Omega::Vector2.new(0, 80)).set_texture("assets/textures/gui/progress_bar.png").set_max(100).set_value(100)
+        @boss_life = GUI::ProgressBar.new().set_tile_size(Omega::Vector2.new(48, 20)).set_size(Omega::Vector2.new(144, 16)).set_scale(Omega::Vector2.new(2, 2)).set_position(Omega::Vector2.new(0, 80)).set_texture("assets/textures/gui/progress_bar.png").set_max(@boss._hp).set_value(@boss._hp)
 
         score_group.add(score, @n, placeholder, boss_text, @boss_life)
         section.add(score_group)
@@ -59,12 +63,17 @@ class PlayState < Omega::State
         # MusiK
         @music = Gosu::Song.new("assets/musics/flandres_theme.ogg")
         @music.play(true)
-        @volume ||= 1
+        @volume ||= 0
     end
 
     def update_substate
         if not @player.is_alive? and not @substate
             @substate = GameOverState.new()
+            @substate.load()
+        end
+
+        if @boss.is_dead? and not @substate
+            @substate = WinState.new()
             @substate.load()
         end
 
@@ -86,12 +95,18 @@ class PlayState < Omega::State
     def update
         Game.debug
 
+        if $debug
+            if Omega::just_pressed(Gosu::KB_K)
+                @boss.hurt(10000000000)
+            end
+        end
+
         @music.volume = @volume # because the FRICKING VOLUME ATTRIBUTE IS WRITE ONLY GRAAAH
         
         return if update_substate()
         # $score += 10 if @tick % 60 == 0 and @tick != 0
         @n.set_text("#{$score}")
-        @boss_life.set_value(100)
+        @boss_life.set_value(@boss._hp)
         @gui.update
         @parallax.position.y += 1
         @player.update
@@ -132,6 +147,7 @@ class PlayState < Omega::State
         end
         @gui.draw
         draw_substate()
+        @debug_text.draw if $debug
         # $bullet_zone.draw()
     end
 end

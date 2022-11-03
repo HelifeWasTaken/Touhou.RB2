@@ -25,6 +25,11 @@ class Boss < Entity
             emitter.update if (not emitter.nil? and emitter.is_emitting?)
         end
         @_actual_attack.update if not @_actual_attack.nil?
+        @sprite.position.update_easing
+        @_hitbox.set_position(@sprite.position.x - @_hitbox.w / 2.0, @sprite.position.y - @_hitbox.h / 2.0)
+        for emitter in @emitters
+            emitter.set_position(@sprite.position.to_vector2) if not emitter.nil?
+        end
     end
 
     def emit(index, data = {})

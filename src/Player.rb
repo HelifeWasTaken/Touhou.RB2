@@ -83,6 +83,8 @@ class Player
         @sprite.position.z = 50000
 
         @hitbox = PlayerCollider.new(self, 0, 0, 12, 12)
+
+        @alive = true
     end
 
     def x()
@@ -155,10 +157,14 @@ class Player
         end
     end
 
+    def kill()
+        @alive = false
+    end
+
     # Dummy method, only for test purposes
     def is_alive?
-        return false if Omega::pressed(Gosu::KB_F1)
-        return true
+        # return false if Omega::pressed(Gosu::KB_F1)
+        return @alive
     end
 end
 

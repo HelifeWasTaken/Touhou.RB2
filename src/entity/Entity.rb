@@ -1,5 +1,7 @@
 class Entity
 
+    attr_reader :_hp
+
     def initialize(source, width = 48, height = 48)
         @sprite = if not source.nil? then Omega::SpriteSheet.new(source, width, height) else nil end
         @sprite.set_origin(0.5) if not @sprite.nil?
@@ -34,6 +36,9 @@ class Entity
         @tick += 1
         @emitter.update if (not @emitter.nil? and @emitter.is_emitting?)
         @_actual_attack.update if not @_actual_attack.nil?
+        @sprite.position.update_easing
+        @_hitbox.set_position(@sprite.position.x - @_hitbox.w / 2.0, @sprite.position.y - @_hitbox.h / 2.0)
+        @emitter.set_position(@sprite.position.to_vector2) if not @emitter.nil?
     end
 
     def emit(data = {})
@@ -73,6 +78,11 @@ class Entity
         return set_position(@sprite.position.to_vector2 + vec) if not @sprite.nil?
     end
 
+    def move_to(vec)
+        @sprite.position.move_to(vec)
+        return self
+    end
+
     def set_invicible(value = true)
         @invicible = value
         return self
@@ -84,6 +94,7 @@ class Entity
     end
 
     def use_attack(key, extra_data = {})
+        # return if not @_actual_attack.nil? and @_actual_attack.is_active?
         @_actual_attack = @_attacks[key]
         @_actual_attack.use(extra_data)
     end
@@ -104,7 +115,7 @@ class Entity
     end
 
     def is_dead?()
-        return @_hp > 0
+        return @_hp <= 0
     end
 
     def is_immune?()

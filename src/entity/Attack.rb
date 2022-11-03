@@ -73,6 +73,10 @@ class Attack
         @_tick = -1 if reset_tick
     end
 
+    def is_active?()
+        return (@_state == SETUP or @_state == UPDATE)
+    end
+
     protected
 
     def on_setup()

@@ -291,6 +291,7 @@ class PlayerCollider < CollidableEntity
     def on_collision(other)
         return if not (HitboxType::isBullet(other.type))
         return if other.type == HitboxType::PLAYER_BULLET
+        @_player.kill
         # @_parent.die
         # throw "PLAYER HAS BEEN HIT"
     end

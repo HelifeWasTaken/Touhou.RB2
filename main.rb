@@ -224,16 +224,18 @@ class Game < Omega::RenderWindow
 
     $bullet_zone = Omega::Rectangle.new(-100, -100, 980, 1260)
 
+    $player = nil
+
     def load
         $game = self
 
         $camera = Omega::Camera.new($scale)
-        # transition = Omega::FadeTransition.new(5, Omega::Color::copy(Omega::Color::BLACK)) { Omega.set_state(PlayState.new) }
-        # transition.alpha = 255
+        transition = Omega::FadeTransition.new(5, Omega::Color::copy(Omega::Color::BLACK)) { Omega.set_state(MenuState.new) }
+        transition.alpha = 255
 
-        # Omega.launch_transition(transition)
+        Omega.launch_transition(transition)
 
-        Omega.set_state(PlayState.new)
+        # Omega.set_state(PlayState.new)
     end
 
     def Game.is_just_pressed_ok

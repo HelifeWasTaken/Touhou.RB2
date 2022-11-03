@@ -147,12 +147,12 @@ class SplitEmitter < BulletEmitter
         inc = 360.0 / @number.to_f if @number > 0
         if (data[:center] != nil)
             for i in 0...@number
-                @_sink << @bullet.clone().set_position(data[:center] + Omega::Vector2.new(@radius * Math::cos(Omega::to_rad(angle)), @radius * Math::sin(Omega::to_rad(angle))).toVector3).set_angle(angle).set_speed(@speed)
+                @_sink << @bullet.clone().set_position(data[:center] + Omega::Vector2.new(@radius * Math::cos(Omega::to_rad(angle)), @radius * Math::sin(Omega::to_rad(angle))).to_vector3).set_angle(angle).set_speed(@speed)
                 angle += inc
             end
         else
             for i in 0...@number
-                @_sink << @bullet.clone().set_position(data[:center] + Omega::Vector2.new(@radius * Math::cos(Omega::to_rad(angle)), @radius * Math::sin(Omega::to_rad(angle))).toVector3).set_angle(angle).set_speed(@speed)
+                @_sink << @bullet.clone().set_position(@center + Omega::Vector2.new(@radius * Math::cos(Omega::to_rad(angle)), @radius * Math::sin(Omega::to_rad(angle))).to_vector3).set_angle(angle).set_speed(@speed)
                 angle += inc
             end
         end
@@ -192,6 +192,10 @@ class SplitEmitter < BulletEmitter
     def set_split_bullet(bullet_)
         @bullet = bullet_
         return self
+    end
+
+    def set_position(pos)
+        set_center(pos)
     end
 end
 

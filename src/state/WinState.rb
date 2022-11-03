@@ -1,4 +1,4 @@
-class GameOverState < Omega::State
+class WinState < Omega::State
 
     TARGET_LOGO_SCALE   = 2.5
     DEFAULT_TEXT_SCALE  = 3.5
@@ -14,11 +14,11 @@ class GameOverState < Omega::State
         @spell_logo.position = Omega::Vector3.new((Omega.width / 2), (Omega.height / 2), 0)
 
         # Filter colors
-        @color = Omega::Color.new(0, 255, 32, 32)
+        @color = Omega::Color.new(0, 32, 255, 32)
         @quit_color = Omega::Color.new(0, 0, 0, 0)
 
         # Texts
-        @gameover_text = Omega::Text.new("Game Over", $font)
+        @gameover_text = Omega::Text.new("Congrats", $font)
         @gameover_text.set_scale(3.5)
         @gameover_text.position = Omega::Vector3.new((Omega.width - @gameover_text.width) / 2,
                                                     (Omega.height - @gameover_text.height) / 2 - 2, 0)
@@ -31,7 +31,7 @@ class GameOverState < Omega::State
         @global_scale = 1.0
         @phase = 0
         @gameover_text_offset = 0
-        @choices = ["Try again", "Quit"]
+        @choices = ["Try again", "Credits", "Quit"]
         @choice_index = 0
         @channel = nil
         @finished = false
@@ -60,9 +60,10 @@ class GameOverState < Omega::State
                 $sounds["swoosh_1"].play()
             end
         when 1
+            puts @choice_index
             @global_scale -= (@global_scale - FINAL_GLOBAL_SCALE) * 0.16
             if Omega::just_pressed(Gosu::KB_RETURN)
-                @phase = (@choice_index == 0) ? 2 : 3
+                @phase = @choice_index + 2
                 @channel = $sounds["swoosh_2"].play()
                 $sounds["accept"].play()
             elsif Omega::just_pressed(Gosu::KB_W)
@@ -72,9 +73,14 @@ class GameOverState < Omega::State
                 @choice_index = (@choice_index + 1) % @choices.size
                 $sounds["click"].play()
             end
-        when 2, 3
+        when 2, 3, 4
             @finished = true if @phase != 3 and @spell_logo.alpha == 0
             if @phase == 3
+                transition = Omega::FadeTransition.new(5, Omega::Color::copy(Omega::Color::BLACK)) { Omega.set_state(CreditState.new) }
+                transition.alpha = 255
+
+                Omega.launch_transition(transition)
+            elsif @phase == 4
                 if @quit_color.alpha == 255 and (not @channel or not @channel.playing?)
                     Omega.close
                 end

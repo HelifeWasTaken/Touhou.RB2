@@ -233,7 +233,7 @@ class Game < Omega::RenderWindow
 
         # Omega.launch_transition(transition)
 
-        Omega.set_state(GameOverState.new)
+        Omega.set_state(PlayState.new)
     end
 
     def Game.is_just_pressed_ok

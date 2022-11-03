@@ -1,8 +1,9 @@
 class GameOverState < Omega::State
 
-    TARGET_LOGO_SCALE = 2.5
-    DEFAULT_TEXT_SCALE = 3.5
-    FINAL_GLOBAL_SCALE = 4.0
+    TARGET_LOGO_SCALE   = 2.5
+    DEFAULT_TEXT_SCALE  = 3.5
+    FINAL_GLOBAL_SCALE  = 4.0
+    Z                   = 100_000_000
 
     def load
         # Spell thingy
@@ -33,6 +34,7 @@ class GameOverState < Omega::State
         @choices = ["Try again", "Quit"]
         @choice_index = 0
         @channel = nil
+        @finished = false
 
         # Swoosh!
         $sounds["swoosh"].play()
@@ -40,14 +42,14 @@ class GameOverState < Omega::State
 
     def update_spell_logo
         @spell_logo.position.x -= @spell_logo.position.x * (@spell_logo.scale.x * 0.01) if @phase == 1
-        @spell_logo.alpha += 5 if @spell_logo.alpha < 255
+        @spell_logo.alpha += 5 if @spell_logo.alpha < 255 and @phase < 2
         @spell_logo.scale.x -= (@spell_logo.scale.x - TARGET_LOGO_SCALE * @global_scale) * 0.1
         @spell_logo.scale.y -= (@spell_logo.scale.y - TARGET_LOGO_SCALE * @global_scale) * 0.1
         @spell_logo.angle += 1
     end
 
     def update_filter_color
-        @color.alpha = (@color.alpha + 3).clamp(0, 128)
+        @color.alpha = (@color.alpha + 3).clamp(0, 128) if @phase < 2
     end
 
     def update
@@ -71,16 +73,17 @@ class GameOverState < Omega::State
                 $sounds["click"].play()
             end
         when 2, 3
-            @global_scale *= 1.03
-            @choices_text.alpha = (@choices_text.alpha - 10).clamp(0, 255)
-            @spell_logo.alpha = (@spell_logo.alpha - 10).clamp(0, 255)
-            @color.alpha = (@color.alpha - 10).clamp(0, 255)
+            @finished = true if @phase != 3 and @spell_logo.alpha == 0
             if @phase == 3
                 if @quit_color.alpha == 255 and (not @channel or not @channel.playing?)
                     Omega.close
                 end
-                @quit_color.alpha = (@quit_color.alpha + 10).clamp(0, 255)
+                @quit_color.alpha = (@quit_color.alpha + 5).clamp(0, 255)
             end
+            @global_scale *= 1.03
+            @choices_text.alpha = (@choices_text.alpha - 5).clamp(0, 255)
+            @spell_logo.alpha = (@spell_logo.alpha - 5).clamp(0, 255)
+            @color.alpha = (@color.alpha - 5).clamp(0, 255)
         end
         
         update_spell_logo()
@@ -94,9 +97,9 @@ class GameOverState < Omega::State
         end
         @gameover_text.scale.x -= (@gameover_text.scale.x - DEFAULT_TEXT_SCALE * @global_scale) * 0.1
         @gameover_text.scale.y -= (@gameover_text.scale.y - DEFAULT_TEXT_SCALE * @global_scale) * 0.1
-        
         @gameover_text.position = Omega::Vector3.new((Omega.width - @gameover_text.width) / 2,
-                                            (Omega.height - @gameover_text.height) / 2, 0)
+                                            (Omega.height - @gameover_text.height) / 2,
+                                            Z)
         @gameover_text_offset += @gameover_text.scale.x if @gameover_text_offset < @gameover_text.height and Omega.frame_count % 2 == 1
     end
 
@@ -106,7 +109,8 @@ class GameOverState < Omega::State
             @choices_text.text = "What will you do?"
             @choices_text.alpha = (@choices_text.alpha + 10).clamp(0, 255)
             @choices_text.position = Omega::Vector3.new((Omega.width - @choices_text.width) / 2 + 300,
-                                                        (Omega.height - @choices_text.height) / 2 - 100, 0)
+                                                        (Omega.height - @choices_text.height) / 2 - 100,
+                                                        Z)
             @choices_text.draw()
 
             @choices_text.position.y += @choices_text.height + 20
@@ -118,17 +122,23 @@ class GameOverState < Omega::State
                 @choices_text.text = choice_open + choice
                 @choices_text.set_scale(1.1)
                 @choices_text.position.y += @choices_text.height + 20
+                @choices_text.position.z = Z
                 @choices_text.draw()
             end
         end
     end
 
     def draw
-        Gosu.draw_rect(0, 0, Omega.width, Omega.height, @color, 0)
+        Gosu.draw_rect(0, 0, Omega.width, Omega.height, @color, Z)
+        @spell_logo.z = Z
         @spell_logo.draw
         draw_gameover_text()
         draw_choices()
-        Gosu.draw_rect(0, 0, Omega.width, Omega.height, @quit_color, 0) if @quit_color.alpha
+        Gosu.draw_rect(0, 0, Omega.width, Omega.height, @quit_color, Z) if @quit_color.alpha
+    end
+
+    def is_finished?
+        return @finished
     end
 
 end

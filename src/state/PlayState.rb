@@ -53,10 +53,42 @@ class PlayState < Omega::State
 
         @tick = 0
 
+        # Game Over Substate
+        @substate = nil
+
+        # MusiK
+        @music = Gosu::Song.new("assets/musics/flandres_theme.ogg")
+        @music.play(true)
+        @volume ||= 1
+    end
+
+    def update_substate
+        if not @player.is_alive? and not @substate
+            @substate = GameOverState.new()
+            @substate.load()
+        end
+
+        if @substate
+            @volume -= (@volume - 0.1) * 0.05
+            @substate.update
+            if @substate.is_finished?
+                @substate = nil
+                $bullet_sink.clear
+                load()
+            end
+            return true
+        else
+            @volume -= (@volume - 1) * 0.1
+        end
+        return false
     end
 
     def update
         Game.debug
+
+        @music.volume = @volume # because the FRICKING VOLUME ATTRIBUTE IS WRITE ONLY GRAAAH
+        
+        return if update_substate()
         # $score += 10 if @tick % 60 == 0 and @tick != 0
         @n.set_text("#{$score}")
         @boss_life.set_value(100)
@@ -80,6 +112,11 @@ class PlayState < Omega::State
         $tree.update
     end
 
+    def draw_substate
+        @substate.draw if @substate
+        return @substate != nil
+    end
+
     def draw
         @parallax.draw
         # $tree.draw
@@ -94,6 +131,7 @@ class PlayState < Omega::State
             place.draw()
         end
         @gui.draw
+        draw_substate()
         # $bullet_zone.draw()
     end
 end

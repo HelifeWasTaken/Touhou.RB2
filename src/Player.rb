@@ -169,9 +169,9 @@ class PlayerEmitter < BulletEmitter
         super(data)
         
         @tick = 0
-        Bullet.new("assets/textures/bullet/kek_bullet.png").set_bullet_side(false).set_sink($bullet_sink).set_speed(25).set_angle(-90).set_position(@pos - Omega::Vector2.new(0, 6)).spawn()
-        Bullet.new("assets/textures/bullet/kek_bullet.png").set_bullet_side(false).set_sink($bullet_sink).set_speed(25).set_angle(-91).set_position(@pos - Omega::Vector2.new(8, 4)).spawn()
-        Bullet.new("assets/textures/bullet/kek_bullet.png").set_bullet_side(false).set_sink($bullet_sink).set_speed(25).set_angle(-89).set_position(@pos - Omega::Vector2.new(-8, 4)).spawn()
+        Bullet.new("assets/textures/bullet/kek_bullet.png").set_bullet_side(false).set_sink($bullet_sink).set_speed(20).set_angle(-90).set_position(@pos - Omega::Vector2.new(0, 6)).spawn()
+        Bullet.new("assets/textures/bullet/kek_bullet.png").set_bullet_side(false).set_sink($bullet_sink).set_speed(20).set_angle(-91).set_position(@pos - Omega::Vector2.new(8, 4)).spawn()
+        Bullet.new("assets/textures/bullet/kek_bullet.png").set_bullet_side(false).set_sink($bullet_sink).set_speed(20).set_angle(-89).set_position(@pos - Omega::Vector2.new(-8, 4)).spawn()
     end
 
     def update()

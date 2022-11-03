@@ -6,11 +6,12 @@ class PlayState < Omega::State
         @parallax = Omega::Parallax.new([Omega::Sprite.new("assets/nebula.png")])
         @parallax.scale = Omega::Vector2.new(4, 4)
 
-        @player.set_position(Omega::Vector2.new(Omega.width / 2, Omega.height * 0.8))
+        @player.set_position(Omega::Vector2.new(780 / 2, Omega.height * 0.8))
 
         @gui = Gui.new()
 
-        @boss = BossSoniaVA.new(@player)
+        # @boss = BossSoniaVA.new(@player)
+        @boss = Cirno.new().set_position(Omega::Vector2.new(780 / 2, 1060 / 2))
 
         @placeholders = [
             Omega::Rectangle.new(0, 0, 10, 1080),
@@ -34,7 +35,7 @@ class PlayState < Omega::State
         placeholder = GUI::Section.new().set_size(Omega::Vector2.new(96, 96))
 
         boss_text = GUI::Text.new().set_text("Boss:").set_size(Omega::Vector2.new(96, 0)).set_font($font)
-        @boss_life = GUI::ProgressBar.new().set_tile_size(Omega::Vector2.new(48, 20)).set_size(Omega::Vector2.new(144, 16)).set_scale(Omega::Vector2.new(2, 2)).set_position(Omega::Vector2.new(0, 80)).set_texture("assets/textures/gui/progress_bar.png").set_max(@boss.health).set_value(@boss.health)
+        @boss_life = GUI::ProgressBar.new().set_tile_size(Omega::Vector2.new(48, 20)).set_size(Omega::Vector2.new(144, 16)).set_scale(Omega::Vector2.new(2, 2)).set_position(Omega::Vector2.new(0, 80)).set_texture("assets/textures/gui/progress_bar.png").set_max(100).set_value(100)
 
         score_group.add(score, @n, placeholder, boss_text, @boss_life)
         section.add(score_group)
@@ -52,19 +53,13 @@ class PlayState < Omega::State
 
         @tick = 0
 
-
-        a = Hitbox.new(0, 0, 48, 48, HitboxType::ENEMY)
-        b = Hitbox.new(594, 858, 12, 12, HitboxType::PLAYER)
-
-        puts a.collides?(b)
-
     end
 
     def update
         Game.debug
         # $score += 10 if @tick % 60 == 0 and @tick != 0
         @n.set_text("#{$score}")
-        @boss_life.set_value(@boss.health)
+        @boss_life.set_value(100)
         @gui.update
         @parallax.position.y += 1
         @player.update

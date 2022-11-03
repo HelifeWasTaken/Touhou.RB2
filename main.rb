@@ -5,7 +5,7 @@ forbidden_files = [
     "push_that.rb"
 ]
 
-(Dir["*.rb"] + Dir["src/*.rb"] + Dir["src/gui/*.rb"] + Dir["src/state/*.rb"] + Dir["src/gui/widget/*.rb"].reverse).each do |file|
+(Dir["*.rb"] + Dir["src/*.rb"] + Dir["src/gui/*.rb"] + Dir["src/state/*.rb"] + Dir["src/entity/*.rb"] + Dir["src/entity/boss/*.rb"] + Dir["src/gui/widget/*.rb"].reverse).each do |file|
     require_relative file if file != File.basename(__FILE__) and not forbidden_files.include?(file)
 end
 

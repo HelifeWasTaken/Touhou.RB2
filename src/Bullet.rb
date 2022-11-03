@@ -10,10 +10,13 @@ class BulletBehavior
     def initialize(owner = nil) 
         @owner = owner;
         @tick = 0
-        @need_data = {
+        @feed = {
             :feed => false
         }
+        @extra = {}
     end
+
+    def setup(); end
 
     def update()
         # puts "Killing bullet at #{@owner.position.to_s}" if not Omega.position_in_window?(@owner.position, Omega::Vector2.new(250, 250))
@@ -33,10 +36,19 @@ class BulletBehavior
 
     def feed_in(); end
 
+    def need_feed_in?()
+        return @feed[:feed]
+    end
+
     def copy(other)
         tmp = self.clone()
         tmp.reset_owner(other) # kek
         return tmp
+    end
+
+    def push_extra(data = {})
+        @extra.merge!(data)
+        return self
     end
 
     protected
@@ -82,8 +94,8 @@ class CircularBehavior < BulletBehavior
 
     def use_owner_position_as_center()
         if @owner.nil?
-            @need_data[:feed] = true
-            @need_data[:center] = true
+            @feed[:feed] = true
+            @feed[:center] = true
         else
             @center = @owner.position.toVector2
         end
@@ -111,13 +123,13 @@ class CircularBehavior < BulletBehavior
     end
 
     def feed_in()
-        if @need_data[:center]
+        if @feed[:center]
             @center = @owner.position.toVector2
         end
     end
 
     def need_feed_in?()
-        return @need_data[:feed]
+        return @feed[:feed]
     end
 end
 
@@ -137,6 +149,53 @@ class SpiralBehavior < CircularBehavior
     def set_radius_speed(radius_speed)
         @radius_speed = radius_speed
         return self
+    end
+end
+
+# class LerpBehavior < LinearBehavior
+
+#     def initialize(owner = nil)
+#         super(owner)
+#         @deceleration = 0.1
+#     end
+
+#     def set_deceleartion(deceleration)
+#         @deceleration = deceleration
+#         return self
+#     end
+
+#     def update()
+#         @owner.speed -= @deceleration
+#         if @owner.speed > 0
+#             @owner.move(Omega::Vector2.new(@owner.speed * Math::cos(Omega::to_rad(@owner.rotation)), @owner.speed * Math::sin(Omega::to_rad(@owner.rotation))))
+#         else
+#             @owner.pop_behavior
+#         end
+#         super();
+#     end
+# end
+
+class DistanceBehavior < LinearBehavior
+
+    def initialize(owner = nil, distance = 0)
+        super(owner)
+        @distance = distance
+        @_runner = 0
+        # @start_position = Omega::Vector2.new(0, 0)
+    end
+
+    def set_distance(distance)
+        @distance = distance
+        return self
+    end
+
+    def update()
+        @owner.speed = 0 if @_runner >= @distance
+        @_runner += @owner.speed if @_runner < @distance
+        super() if @owner.speed > 0
+        if @owner.speed <= 0
+            @owner.pop_behavior
+        end
     end
 end
 
@@ -181,7 +240,7 @@ class Bullet < Omega::Sprite
     end
 
     def initialize_copy(this)
-        self.hitbox = this.hitbox.copy(self);
+        self.hitbox = this.hitbox.clone;
         self._behavior = this._behavior.map { |behavior| {:behavior => behavior[:behavior].copy(self), :type => behavior[:type], :extra => behavior[:extra]} }
         super(this)
     end
@@ -208,6 +267,7 @@ class Bullet < Omega::Sprite
             end
             if @_behavior[-1][:type] == BehaviorType::TEMPORARY
                 @_behavior.pop() if @_behavior[-1][:behavior].getTick() > @_behavior[-1][:extra][:duration]
+                @_behavior[-1][:behavior].setup if @_behavior.size > 0
             end
             @_behavior[-1][:behavior].update()
         end
@@ -304,6 +364,12 @@ class Bullet < Omega::Sprite
                 :extra => extra
             }
         ]
+        return self
+    end
+
+    def pop_behavior()
+        @_behavior.pop()
+        @_behavior[-1][:behavior].setup if @_behavior.size > 0
         return self
     end
 

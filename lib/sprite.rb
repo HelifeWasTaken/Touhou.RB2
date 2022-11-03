@@ -56,6 +56,13 @@ module Omega
             @trail_frame_delay = 0
         end
 
+        def initialize_copy(source)
+            self.position = source.position.clone
+            self.scale = source.scale.clone
+            self.origin = source.origin.clone
+            self.flip = source.flip.clone
+        end
+
         def update; end
 
         def draw

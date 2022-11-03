@@ -27,6 +27,10 @@ class Hitbox
     @owner = owner
   end
 
+  def copy(new_owner)
+    return Hitbox.new(@x, @y, @w, @h, @type, new_owner)
+  end
+
   def collides?(other)
     if @x > other.x + other.w or
         @x + @w < other.x or
@@ -203,46 +207,51 @@ end
 
 class CollidableEntity
 
-  attr_accessor :collision
+    attr_accessor :collision, :rect_collision
 
-  def initialize(child, x, y, w, h, type)
-      # ...
-      
-      #assume type x, y, w, h and type are set, accesible and exists
-      @rect_collision = Omega::Rectangle.new(x, y, w, h)
+    def initialize(child, x, y, w, h, type)
+        # ...
+        
+        #assume type x, y, w, h and type are set, accesible and exists
+        @rect_collision = Omega::Rectangle.new(x, y, w, h)
 
-      @collision = Hitbox.new(@rect_collision.position.x, @rect_collision.position.y,
-                              @rect_collision.width, @rect_collision.height, type, child)
-  end
+        @collision = Hitbox.new(@rect_collision.position.x, @rect_collision.position.y,
+                                @rect_collision.width, @rect_collision.height, type, child)
+    end
 
-  def on_collision(other)
-      # does nothing by default
-  end
+    def initialize_copy(source)
+        self.rect_collision = source.rect_collision.clone
+        self.collision = source.collision.copy(self)
+    end
 
-  def update_collider_position(x, y)
-      @rect_collision.position.x = x
-      @rect_collision.position.y = y
-      @collision.set_position(x, y)
-  end
+    def on_collision(other)
+        # does nothing by default
+    end
 
-  def update_collider_size(w, h)
-      @rect_collision.width = w
-      @rect_collision.height = h
-      @collision.set_size(w, h)
-  end
+    def update_collider_position(x, y)
+        @rect_collision.position.x = x
+        @rect_collision.position.y = y
+        @collision.set_position(x, y)
+    end
 
-  def update_collider(x, y, w, h)
-    update_collider_position(x, y)
-    update_collider_size(w, h)
-  end
+    def update_collider_size(w, h)
+        @rect_collision.width = w
+        @rect_collision.height = h
+        @collision.set_size(w, h)
+    end
 
-  def draw()
-    @collision.draw()
-  end
+    def update_collider(x, y, w, h)
+        update_collider_position(x, y)
+        update_collider_size(w, h)
+    end
 
-  def copy(owner)
-    return CollidableEntity.new(owner, @collision.x, @collision.y, @collision.w, @collision.h, @collision.type)
-  end
+    def draw()
+        @collision.draw()
+    end
+
+    def copy(owner)
+        return CollidableEntity.new(owner, @collision.x, @collision.y, @collision.w, @collision.h, @collision.type)
+    end
 end
 
 class BulletCollider < CollidableEntity
@@ -301,19 +310,3 @@ class BossCollider < CollidableEntity
         # throw "BOSS HAS BEEN HIT"
     end
 end
-
-#class Player < CollidableEntity
-
-#  def initialize(x, y)
-#    super(self, x, y, 32, 32, 0)
-#  end
-
-#  def on_collision(other)
-#    puts "Player collided with #{other}"
-#  end
-
-#  def update
-#    update_collider(x, y, w, h)
-#  end
-
-#end

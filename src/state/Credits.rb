@@ -10,6 +10,7 @@ class CreditState < Omega::State
         @mattis = Omega::Text.new("Dalleau Mattis", $font)
         @raph = Omega::Text.new("Turpin Raphaël", $font)
         @d3nx = Omega::Text.new("Maillot Denis", $font)
+        @tsy = Omega::Text.new("Tessy Grondin", $font)
         @joke = Omega::Text.new("Le manque de sommeil", $font)
         @joke2 = Omega::Text.new("Le manque de temps", $font)
         @sprt = Omega::Text.new("Assets:", $font)
@@ -43,8 +44,9 @@ class CreditState < Omega::State
         @mattis.draw_at_pos(Omega::Text::WindowPos::MIDDLE, 0, @pos + 350);
         @raph.draw_at_pos(Omega::Text::WindowPos::MIDDLE, 0, @pos + 400);
         @d3nx.draw_at_pos(Omega::Text::WindowPos::MIDDLE, 0, @pos + 450);
-        @joke.draw_at_pos(Omega::Text::WindowPos::MIDDLE, 0, @pos + 500);
-        @joke2.draw_at_pos(Omega::Text::WindowPos::MIDDLE, 0, @pos + 550);
+        @tsy.draw_at_pos(Omega::Text::WindowPos::MIDDLE, 0, @pos + 500);
+        @joke.draw_at_pos(Omega::Text::WindowPos::MIDDLE, 0, @pos + 550);
+        @joke2.draw_at_pos(Omega::Text::WindowPos::MIDDLE, 0, @pos + 600);
         @sprt.draw_at_pos(Omega::Text::WindowPos::MIDDLE, 0, @pos + 700);
         @touhou.draw_at_pos(Omega::Text::WindowPos::MIDDLE, 0, @pos + 800);
         @license.draw_at_pos(Omega::Text::WindowPos::MIDDLE, 0, @pos + 1050);
